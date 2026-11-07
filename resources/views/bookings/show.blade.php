@@ -2,8 +2,43 @@
 
 @section('title', 'Detail Reservasi - ' . $booking->booking_code . ' - FutsalHub')
 
+@push('styles')
+<style>
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+        body {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .print-receipt-card {
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: none !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+        }
+        /* Ensure dark invoice header retains styling */
+        .receipt-header {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:p-0 print:max-w-none">
     <!-- Top Bar Navigation & Print Action -->
     <div class="flex items-center justify-between mb-6 print:hidden">
         <a href="{{ route('booking.my') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-emerald-600 transition-colors">
@@ -24,13 +59,13 @@
     </div>
 
     <!-- Official Invoice Receipt Card -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden print:shadow-none print:border-none">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden print-receipt-card">
         <!-- Invoice Header Banner -->
-        <div class="bg-slate-900 text-white p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="receipt-header bg-slate-900 text-white p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo FutsalHub" class="w-12 h-12 object-contain">
+                <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-12 h-12 object-contain">
                 <div>
-                    <h2 class="text-xl font-black tracking-tight">Futsal<span class="text-emerald-400">Hub</span> Arena</h2>
+                    <h2 class="text-xl font-black tracking-tight text-white">Futsal<span class="text-emerald-400">Hub</span> Arena</h2>
                     <p class="text-xs text-slate-400">Bukti Reservasi & Kuitansi Pembayaran Resmi</p>
                 </div>
             </div>
@@ -42,12 +77,12 @@
         </div>
 
         <!-- Meta Info Grid -->
-        <div class="p-6 sm:p-8 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+        <div class="p-6 sm:p-8 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs bg-white">
             <div>
                 <span class="text-slate-400 uppercase font-bold tracking-wider text-[10px] block mb-1">Informasi Pemesan</span>
                 <p class="font-bold text-slate-900 text-sm">{{ $booking->user->name }}</p>
                 <p class="text-slate-500">{{ $booking->user->email }}</p>
-                <p class="text-slate-500"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1"></i> {{ $booking->user->phone }}</p>
+                <p class="text-slate-500"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1 print:hidden"></i> {{ $booking->user->phone }}</p>
             </div>
 
             <div>
@@ -67,7 +102,7 @@
         </div>
 
         <!-- Breakdown Table -->
-        <div class="p-6 sm:p-8">
+        <div class="p-6 sm:p-8 bg-white">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-4">Rincian Slot Jam Operasional</h3>
             
             <div class="border border-slate-200 rounded-2xl overflow-hidden mb-6">
@@ -85,7 +120,7 @@
                             <tr>
                                 <td class="px-4 py-3 text-slate-400 font-bold">{{ $index + 1 }}</td>
                                 <td class="px-4 py-3 font-bold text-slate-800">
-                                    <i class="fa-regular fa-clock text-emerald-600 mr-1.5"></i>
+                                    <i class="fa-regular fa-clock text-emerald-600 mr-1.5 print:hidden"></i>
                                     {{ $detail->timeSlot->time_range }} WIB
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">60 Menit</td>
@@ -122,13 +157,13 @@
                 </div>
 
                 <div class="text-right">
-                    <p class="text-slate-400 text-[10px]">Tunjukkan lembar ini atau kode booking ke resepsionis lapangan saat check-in.</p>
+                    <p class="text-slate-500 text-[11px] font-medium">Tunjukkan lembar ini atau kode booking ke resepsionis lapangan saat check-in.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Notice -->
-        <div class="bg-slate-100 px-6 sm:px-8 py-4 border-t border-slate-200 text-center text-[11px] text-slate-500">
+        <!-- Footer Notice (hidden on print as requested, only receipt content is shown) -->
+        <div class="bg-slate-100 px-6 sm:px-8 py-4 border-t border-slate-200 text-center text-[11px] text-slate-500 print:hidden">
             Terima kasih telah memilih FutsalHub. Patuhi protokol keselamatan & bawa sepatu futsal yang sesuai dengan jenis lantai.
         </div>
     </div>
