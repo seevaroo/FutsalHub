@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -30,46 +29,48 @@ class ProfileController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'current_password' => ['nullable', 'required_with:password', 'current_password'],
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'phone.required' => 'Nomor WhatsApp / HP wajib diisi.',
-            'avatar.image' => 'Berkas harus berupa gambar.',
-            'avatar.mimes' => 'Format gambar yang diperbolehkan: JPG, JPEG, PNG, WEBP.',
+            'avatar.image' => 'Berkas foto profil harus berupa gambar.',
+            'avatar.mimes' => 'Format gambar yang diperbolehkan: JPG, JPEG, PNG.',
             'avatar.max' => 'Ukuran foto profil maksimal 2MB.',
             'current_password.current_password' => 'Password saat ini tidak sesuai.',
             'password.min' => 'Password baru minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
         ]);
 
-        $user->name = $request->input('name');
-        $user->phone = $request->input('phone');
+        $updateData = [
+            'name' => $request->input('name'),
+            'phone' => $request->input('phone'),
+        ];
 
         // Handle Avatar Upload
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
+            // Delete old avatar from storage if exists
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
+            // Store new file
             $path = $request->file('avatar')->store('avatars', 'public');
-            
-            // Only assign if column exists in table
-            if (Schema::hasColumn('users', 'avatar')) {
-                $user->avatar = $path;
-            }
+            $updateData['avatar'] = $path;
         }
 
         // Handle Password Change
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
+            $updateData['password'] = Hash::make($request->input('password'));
         }
 
-        $user->save();
+        // Update database
+        $user->update($updateData);
+
+        // Immediately refresh user instance in memory & session
+        Auth::setUser($user->fresh());
 
         return back()->with('success', 'Profil Anda berhasil diperbarui.');
     }
 }
-

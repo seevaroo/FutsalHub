@@ -36,7 +36,7 @@
                         <i class="fa-solid fa-upload"></i> Unggah Foto Baru
                     </label>
                     <input type="file" id="avatar" name="avatar" accept="image/*" class="sr-only" onchange="previewAvatar(this)">
-                    <p class="text-[11px] text-slate-400 mt-1.5">Format: JPG, JPEG, PNG, WEBP. Maksimal 2 MB.</p>
+                    <p class="text-[11px] text-slate-400 mt-1.5">Format: JPG, JPEG, PNG. Maksimal 2 MB.</p>
                     @error('avatar')
                         <p class="text-rose-600 text-xs mt-1 font-bold">{{ $message }}</p>
                     @enderror

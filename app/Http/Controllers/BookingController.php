@@ -151,7 +151,11 @@ class BookingController extends Controller
             ->where('user_id', Auth::id());
 
         if ($status && in_array($status, ['pending', 'confirmed', 'completed', 'cancelled'], true)) {
-            $query->where('status', $status);
+            if ($status === 'confirmed') {
+                $query->whereIn('status', ['confirmed', 'completed']);
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         $bookings = $query->latest()->paginate(10);

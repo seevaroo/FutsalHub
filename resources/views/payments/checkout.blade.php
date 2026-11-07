@@ -77,57 +77,26 @@
 
                     <!-- Panel Section: QRIS Content -->
                     <div id="sectionQris" class="space-y-6 pt-2">
-                        <!-- Mockup QRIS Box -->
+                        <!-- QRIS Static Card -->
                         <div class="bg-slate-900 text-white rounded-2xl p-6 text-center shadow-lg relative overflow-hidden">
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 text-emerald-300 border border-white/10 mb-4">
                                 <i class="fa-solid fa-shield-check"></i> Merchant Resmi: PT FUTSALHUB INDONESIA
                             </div>
-                            <h3 class="text-base font-extrabold mb-1">Scan Kode QRIS di Bawah Ini</h3>
-                            <p class="text-xs text-slate-400 mb-6">Total Tagihan: <span class="font-extrabold text-emerald-400 text-sm">{{ $booking->formatted_total }}</span></p>
+                            <h3 class="text-base font-extrabold mb-1">Scan QRIS untuk Pembayaran</h3>
+                            <p class="text-xs text-slate-400 mb-5">Total Tagihan: <span class="font-extrabold text-emerald-400 text-sm">{{ $booking->formatted_total }}</span></p>
 
-                            <!-- Modern QRIS Mockup Graphic -->
-                            <div class="inline-block bg-white p-4 rounded-2xl shadow-xl mx-auto">
-                                <div class="w-48 h-48 bg-white flex flex-col items-center justify-center relative">
-                                    <!-- QR Code SVG Representation -->
-                                    <svg class="w-44 h-44 text-slate-900" viewBox="0 0 100 100" fill="currentColor">
-                                        <!-- Corner 1 -->
-                                        <rect x="0" y="0" width="30" height="30" rx="3" fill="#000" />
-                                        <rect x="5" y="5" width="20" height="20" rx="2" fill="#fff" />
-                                        <rect x="9" y="9" width="12" height="12" rx="1" fill="#000" />
-                                        <!-- Corner 2 -->
-                                        <rect x="70" y="0" width="30" height="30" rx="3" fill="#000" />
-                                        <rect x="75" y="5" width="20" height="20" rx="2" fill="#fff" />
-                                        <rect x="79" y="9" width="12" height="12" rx="1" fill="#000" />
-                                        <!-- Corner 3 -->
-                                        <rect x="0" y="70" width="30" height="30" rx="3" fill="#000" />
-                                        <rect x="5" y="75" width="20" height="20" rx="2" fill="#fff" />
-                                        <rect x="9" y="79" width="12" height="12" rx="1" fill="#000" />
-                                        <!-- Pattern Pixels -->
-                                        <rect x="35" y="5" width="6" height="6" />
-                                        <rect x="45" y="5" width="6" height="12" />
-                                        <rect x="55" y="5" width="6" height="6" />
-                                        <rect x="35" y="15" width="12" height="6" />
-                                        <rect x="55" y="15" width="6" height="12" />
-                                        <!-- Center Logo -->
-                                        <rect x="38" y="38" width="24" height="24" rx="4" fill="#059669" />
-                                        <!-- Bottom Pixels -->
-                                        <rect x="35" y="70" width="6" height="12" />
-                                        <rect x="45" y="75" width="18" height="6" />
-                                        <rect x="70" y="40" width="6" height="18" />
-                                        <rect x="80" y="45" width="15" height="6" />
-                                        <rect x="75" y="60" width="8" height="8" />
-                                        <rect x="70" y="75" width="12" height="12" />
-                                        <rect x="85" y="80" width="12" height="15" />
-                                        <circle cx="50" cy="50" r="6" fill="#fff" />
-                                    </svg>
-                                    <div class="text-[9px] font-black text-slate-800 uppercase tracking-widest mt-1">NMID: ID1020038927</div>
+                            <!-- QRIS Image Box -->
+                            <div class="inline-block bg-white p-3 sm:p-4 rounded-2xl shadow-xl mx-auto max-w-xs">
+                                <img src="{{ asset('images/qris.png') }}" alt="QRIS FutsalHub" class="w-56 h-auto max-h-72 object-contain mx-auto rounded-xl">
+                                <div class="text-[10px] font-bold text-slate-700 tracking-wider mt-2 uppercase">
+                                    NMID: ID1020038927 • PT FUTSALHUB
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-center gap-4 mt-6 text-xs text-slate-300">
-                                <span><i class="fa-solid fa-mobile-screen mr-1 text-emerald-400"></i> Buka Aplikasi Bank / e-Wallet</span>
-                                <span>•</span>
-                                <span><i class="fa-solid fa-camera mr-1 text-emerald-400"></i> Scan & Bayar Tepat Nominal</span>
+                            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 text-xs text-slate-300">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen text-emerald-400"></i> Buka M-Banking / E-Wallet</span>
+                                <span class="hidden sm:inline text-slate-600">•</span>
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-qrcode text-emerald-400"></i> Scan & Bayar Sesuai Total</span>
                             </div>
                         </div>
 

@@ -35,8 +35,9 @@ class ReportController extends Controller
 
         $totalIncome = $bookings->whereIn('status', ['confirmed', 'completed'])->sum('total_price');
         $totalTransactions = $bookings->count();
-        $completedCount = $bookings->where('status', 'completed')->count();
-        $confirmedCount = $bookings->where('status', 'confirmed')->count();
+        $successfulBookings = $bookings->whereIn('status', ['confirmed', 'completed']);
+        $cashCount = $successfulBookings->filter(fn($b) => $b->payment && $b->payment->payment_method === 'cash')->count();
+        $qrisCount = $successfulBookings->filter(fn($b) => $b->payment && $b->payment->payment_method === 'qris')->count();
         $pendingCount = $bookings->where('status', 'pending')->count();
         $cancelledCount = $bookings->where('status', 'cancelled')->count();
 
@@ -51,8 +52,9 @@ class ReportController extends Controller
             'fields',
             'totalIncome',
             'totalTransactions',
-            'completedCount',
-            'confirmedCount',
+            'successfulBookings',
+            'cashCount',
+            'qrisCount',
             'pendingCount',
             'cancelledCount'
         ));

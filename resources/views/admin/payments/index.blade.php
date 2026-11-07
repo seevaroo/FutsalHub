@@ -115,15 +115,23 @@
                                     @endif
                                 </td>
 
-                                <!-- Proof Image Modal Trigger -->
+                                <!-- Proof Image Modal Trigger & Direct Link -->
                                 <td class="px-4 py-4 text-center whitespace-nowrap">
                                     @if($booking->payment && $booking->payment->proof_image)
-                                        <button type="button" 
-                                            onclick="openProofModal('{{ asset('storage/' . $booking->payment->proof_image) }}', '{{ $booking->booking_code }}', '{{ $booking->user->name }}', '{{ $booking->formatted_total }}')"
-                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold transition-colors cursor-pointer group">
-                                            <i class="fa-regular fa-image text-xs group-hover:scale-110 transition-transform"></i>
-                                            <span>Lihat Bukti</span>
-                                        </button>
+                                        <div class="inline-flex items-center gap-1.5">
+                                            <button type="button" 
+                                                onclick="openProofModal('{{ asset('storage/' . $booking->payment->proof_image) }}', '{{ $booking->booking_code }}', '{{ $booking->user->name }}', '{{ $booking->formatted_total }}')"
+                                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold transition-colors cursor-pointer group"
+                                                title="Pratinjau Bukti Transfer">
+                                                <i class="fa-regular fa-image text-xs group-hover:scale-110 transition-transform"></i>
+                                                <span>Lihat Bukti Bayar</span>
+                                            </button>
+                                            <a href="{{ asset('storage/' . $booking->payment->proof_image) }}" target="_blank"
+                                                class="w-7 h-7 inline-flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                                                title="Buka Gambar di Tab Baru">
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                                            </a>
+                                        </div>
                                     @elseif($booking->payment && $booking->payment->payment_method === 'cash')
                                         <span class="text-[10px] text-slate-400 italic">Bayar di Kasir</span>
                                     @else
@@ -158,19 +166,14 @@
                                     @endif
 
                                     <!-- Cash at Venue Mark Completed Button -->
-                                    @if($booking->payment && $booking->payment->payment_method === 'cash' && in_array($booking->status, ['pending', 'confirmed']))
+                                    @if($booking->payment && $booking->payment->payment_method === 'cash' && $booking->status === 'pending')
                                         <form method="POST" action="{{ route('admin.payments.cash_completed', $booking->id) }}" class="inline-block" onsubmit="return confirm('Konfirmasi bahwa customer telah membayar tunai {{ $booking->formatted_total }} di kasir?')">
                                             @csrf
-                                            <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-lg shadow-xs transition-colors">
-                                                <i class="fa-solid fa-hand-holding-dollar text-[10px]"></i> Tandai Lunas (Cash Diterima)
+                                            <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-xs transition-colors">
+                                                <i class="fa-solid fa-hand-holding-dollar text-[10px]"></i> Konfirmasi Bayar Tunai
                                             </button>
                                         </form>
                                     @endif
-
-                                    <!-- Detail Link -->
-                                    <a href="{{ route('booking.show', $booking->id) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors">
-                                        <i class="fa-regular fa-eye"></i>
-                                    </a>
                                 </td>
                             </tr>
                         @endforeach

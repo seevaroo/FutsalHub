@@ -61,7 +61,7 @@ class PaymentController extends Controller
         $proofPath = null;
 
         if ($paymentMethod === 'qris' && $request->hasFile('proof_image')) {
-            $proofPath = $request->file('proof_image')->store('payments', 'public');
+            $proofPath = $request->file('proof_image')->store('receipts', 'public');
 
             Payment::updateOrCreate(
                 ['booking_id' => $booking->id],
@@ -74,7 +74,7 @@ class PaymentController extends Controller
             );
 
             return redirect()->route('booking.my')
-                ->with('success', 'Bukti pembayaran QRIS berhasil diunggah! Mohon tunggu verifikasi admin.');
+                ->with('success', 'Bukti transfer berhasil diunggah! Pembayaran QRIS Anda sedang menunggu verifikasi admin.');
         }
 
         if ($paymentMethod === 'cash') {

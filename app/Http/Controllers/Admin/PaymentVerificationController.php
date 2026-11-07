@@ -62,7 +62,7 @@ class PaymentVerificationController extends Controller
         if ($booking->payment) {
             $booking->payment->update([
                 'status' => 'verified',
-                'paid_at' => $booking->payment->paid_at ?? now(),
+                'paid_at' => now(),
             ]);
         }
 
@@ -71,7 +71,7 @@ class PaymentVerificationController extends Controller
         ]);
 
         return redirect()->back()
-            ->with('success', "Transaksi #{$booking->booking_code} berhasil disetujui. Status booking: Terkonfirmasi (Confirmed).");
+            ->with('success', "Transaksi #{$booking->booking_code} berhasil disetujui. Status booking: Terkonfirmasi.");
     }
 
     /**
@@ -90,11 +90,11 @@ class PaymentVerificationController extends Controller
         ]);
 
         return redirect()->back()
-            ->with('warning', "Transaksi #{$booking->booking_code} ditolak. Status booking diubah menjadi Dibatalkan (Cancelled).");
+            ->with('warning', "Transaksi #{$booking->booking_code} ditolak. Status booking diubah menjadi Dibatalkan.");
     }
 
     /**
-     * Mark cash transaction as paid and booking as completed when customer arrives at venue.
+     * Mark cash transaction as paid and booking as confirmed when customer arrives at venue.
      */
     public function markCashCompleted(Booking $booking)
     {
@@ -113,11 +113,11 @@ class PaymentVerificationController extends Controller
         }
 
         $booking->update([
-            'status' => 'completed',
+            'status' => 'confirmed',
         ]);
 
         return redirect()->back()
-            ->with('success', "Pembayaran tunai #{$booking->booking_code} diterima. Status booking: Selesai / Lunas (Completed).");
+            ->with('success', "Pembayaran tunai #{$booking->booking_code} diterima. Status booking: Terkonfirmasi.");
     }
 }
 

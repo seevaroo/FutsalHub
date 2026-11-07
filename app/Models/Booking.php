@@ -76,19 +76,34 @@ class Booking extends Model
      */
     public function getStatusMetaAttribute(): array
     {
-        return match ($this->status) {
-            'pending' => [
+        if ($this->status === 'pending') {
+            // Jika sudah ada record payment & ada bukti gambar atau metode QRIS
+            if ($this->payment && $this->payment->proof_image && $this->payment->status === 'pending') {
+                return [
+                    'label' => 'Menunggu Verifikasi Admin',
+                    'badge' => 'bg-amber-100 text-amber-800 border-amber-300',
+                    'color' => 'amber',
+                ];
+            }
+
+            if ($this->payment && $this->payment->payment_method === 'cash') {
+                return [
+                    'label' => 'Bayar di Kasir (Pending)',
+                    'badge' => 'bg-teal-100 text-teal-800 border-teal-300',
+                    'color' => 'teal',
+                ];
+            }
+
+            return [
                 'label' => 'Menunggu Pembayaran',
                 'badge' => 'bg-amber-100 text-amber-800 border-amber-300',
                 'color' => 'amber',
-            ],
-            'confirmed' => [
-                'label' => 'Terkonfirmasi (Siap Main)',
-                'badge' => 'bg-blue-100 text-blue-800 border-blue-300',
-                'color' => 'blue',
-            ],
-            'completed' => [
-                'label' => 'Selesai / Lunas',
+            ];
+        }
+
+        return match ($this->status) {
+            'confirmed', 'completed' => [
+                'label' => 'Terkonfirmasi',
                 'badge' => 'bg-emerald-100 text-emerald-800 border-emerald-300',
                 'color' => 'emerald',
             ],

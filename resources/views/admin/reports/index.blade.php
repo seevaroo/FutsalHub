@@ -50,9 +50,8 @@
                     class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-700">
                     <option value="">Semua Status</option>
                     <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="confirmed" {{ $status === 'confirmed' ? 'selected' : '' }}>Confirmed (Siap Main)</option>
-                    <option value="completed" {{ $status === 'completed' ? 'selected' : '' }}>Completed (Lunas)</option>
-                    <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled (Batal)</option>
+                    <option value="confirmed" {{ $status === 'confirmed' ? 'selected' : '' }}>Terkonfirmasi</option>
+                    <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                 </select>
             </div>
 
@@ -82,9 +81,9 @@
         </div>
 
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Selesai / Lunas</span>
-            <span class="text-xl font-black text-blue-600 mt-1 block">{{ $completedCount + $confirmedCount }} Sukses</span>
-            <span class="text-[11px] text-slate-400 mt-0.5 block">{{ $completedCount }} lunas kasir • {{ $confirmedCount }} valid QRIS</span>
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Terkonfirmasi</span>
+            <span class="text-xl font-black text-emerald-600 mt-1 block">{{ $successfulBookings->count() }} Sukses</span>
+            <span class="text-[11px] text-slate-400 mt-0.5 block">{{ $cashCount }} tunai kasir • {{ $qrisCount }} valid QRIS</span>
         </div>
 
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">

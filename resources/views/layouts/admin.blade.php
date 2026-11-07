@@ -7,9 +7,9 @@
     <title>@yield('title', 'Admin Panel - FutsalHub')</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo2.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo2.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo2.png') }}">
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
     <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800">
         <!-- Brand Header -->
         <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-800">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo FutsalHub" class="w-9 h-9 object-contain">
+            <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-9 h-9 object-contain">
             <div>
                 <h1 class="text-base font-extrabold text-white tracking-tight">Futsal<span class="text-emerald-400">Hub</span></h1>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Admin Control</span>
@@ -125,14 +125,19 @@
                 <p class="text-xs text-slate-500 hidden sm:block">Panel Kontrol Reservasi Lapangan FutsalHub</p>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 sm:gap-4">
                 <div class="text-right hidden sm:block">
                     <span class="text-xs font-semibold text-slate-600"><i class="fa-regular fa-calendar-days text-emerald-600 mr-1.5"></i> {{ date('l, d F Y') }}</span>
                 </div>
-                <div class="h-6 w-px bg-slate-200"></div>
+                <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistem Aktif
                 </span>
+                <div class="h-6 w-px bg-slate-200"></div>
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 hover:bg-slate-100 p-1 rounded-xl transition-colors" title="Pengaturan Profil Admin">
+                    <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-500/40 shadow-xs">
+                    <span class="text-xs font-bold text-slate-700 hidden md:inline">{{ auth()->user()->name }}</span>
+                </a>
             </div>
         </header>
 

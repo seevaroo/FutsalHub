@@ -7,9 +7,9 @@
     <title>@yield('title', 'FutsalHub - Sistem Reservasi Lapangan Futsal Modern')</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo2.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo2.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo2.png') }}">
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

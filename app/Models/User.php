@@ -81,7 +81,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get user avatar URL with fallback.
+     * Get user avatar URL with fallback based on role.
      */
     public function getAvatarUrlAttribute(): string
     {
@@ -89,6 +89,10 @@ class User extends Authenticatable
             return asset('storage/' . $this->avatar);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=059669&color=fff&bold=true';
+        if ($this->role === 'admin') {
+            return asset('images/default-admin.png');
+        }
+
+        return asset('images/default-customer.png');
     }
 }

@@ -24,11 +24,8 @@
         <a href="{{ route('booking.my', ['status' => 'pending']) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ $status === 'pending' ? 'bg-amber-500 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
             Menunggu Verifikasi
         </a>
-        <a href="{{ route('booking.my', ['status' => 'confirmed']) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ $status === 'confirmed' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
-            Terkonfirmasi (Siap Main)
-        </a>
-        <a href="{{ route('booking.my', ['status' => 'completed']) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ $status === 'completed' ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
-            Selesai / Lunas
+        <a href="{{ route('booking.my', ['status' => 'confirmed']) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ in_array($status, ['confirmed', 'completed']) ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+            Terkonfirmasi
         </a>
         <a href="{{ route('booking.my', ['status' => 'cancelled']) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ $status === 'cancelled' ? 'bg-rose-600 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
             Dibatalkan

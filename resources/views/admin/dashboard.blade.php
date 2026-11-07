@@ -27,7 +27,7 @@
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Total Transaksi</span>
                 <span class="text-xl sm:text-2xl font-black text-slate-900 mt-1 block">{{ $totalBookings }} Pesanan</span>
                 <span class="text-[11px] text-slate-500 font-medium mt-1 inline-block">
-                    {{ $completedBookings }} selesai • {{ $confirmedBookings }} aktif
+                    {{ $confirmedBookings + $completedBookings }} terkonfirmasi • {{ $pendingBookings }} pending
                 </span>
             </div>
             <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
