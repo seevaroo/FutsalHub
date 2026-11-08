@@ -16,7 +16,15 @@ use Illuminate\Support\Facades\Route;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Saat membuka link utama (/), langsung arahkan ke halaman Login
+Route::get('/', function () {
+    if (auth()->check()) {
+        return auth()->user()->isAdmin()
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('home');
+    }
+    return redirect()->route('login');
+});
 
 // Authentication
 Route::middleware('guest')->group(function () {
@@ -28,10 +36,14 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Halaman Katalog / Home Utama (setelah login)
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
+
 // Profile routes (Customer & Admin)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Internal API for real-time slot checking

@@ -17,10 +17,13 @@ class Booking extends Model
     protected $fillable = [
         'booking_code',
         'user_id',
+        'customer_name',
+        'customer_phone',
         'field_id',
         'booking_date',
         'total_price',
         'status',
+        'cancelled_by',
     ];
 
     protected function casts(): array
@@ -69,6 +72,28 @@ class Booking extends Model
     public function getFormattedTotalAttribute(): string
     {
         return 'Rp ' . number_format($this->total_price, 0, ',', '.');
+    }
+
+    /**
+     * Get display customer name, fallback if user was deleted.
+     */
+    public function getCustomerNameAttribute($value): string
+    {
+        if ($this->user) {
+            return $this->user->name;
+        }
+        return $value ?: 'Pengguna (Akun Dihapus)';
+    }
+
+    /**
+     * Get display customer phone, fallback if user was deleted.
+     */
+    public function getCustomerPhoneAttribute($value): string
+    {
+        if ($this->user) {
+            return $this->user->phone;
+        }
+        return $value ?: '-';
     }
 
     /**

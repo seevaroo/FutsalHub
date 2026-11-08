@@ -80,9 +80,9 @@
         <div class="p-6 sm:p-8 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs bg-white">
             <div>
                 <span class="text-slate-400 uppercase font-bold tracking-wider text-[10px] block mb-1">Informasi Pemesan</span>
-                <p class="font-bold text-slate-900 text-sm">{{ $booking->user->name }}</p>
-                <p class="text-slate-500">{{ $booking->user->email }}</p>
-                <p class="text-slate-500"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1 print:hidden"></i> {{ $booking->user->phone }}</p>
+                <p class="font-bold text-slate-900 text-sm">{{ $booking->customer_name }}</p>
+                <p class="text-slate-500">{{ $booking->user?->email ?? '-' }}</p>
+                <p class="text-slate-500"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1 print:hidden"></i> {{ $booking->customer_phone }}</p>
             </div>
 
             <div>

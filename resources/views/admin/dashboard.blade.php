@@ -125,8 +125,8 @@
                                     {{ $booking->booking_code }}
                                 </td>
                                 <td class="px-5 py-3.5 whitespace-nowrap">
-                                    <span class="font-bold text-slate-900 block">{{ $booking->user->name }}</span>
-                                    <span class="text-[10px] text-slate-400">{{ $booking->user->phone }}</span>
+                                    <span class="font-bold text-slate-900 block">{{ $booking->customer_name }}</span>
+                                    <span class="text-[10px] text-slate-400">{{ $booking->customer_phone }}</span>
                                 </td>
                                 <td class="px-5 py-3.5 whitespace-nowrap">
                                     {{ $booking->field->name }}

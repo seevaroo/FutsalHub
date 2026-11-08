@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -72,5 +73,43 @@ class ProfileController extends Controller
         Auth::setUser($user->fresh());
 
         return back()->with('success', 'Profil Anda berhasil diperbarui.');
+    }
+
+    /**
+     * Delete customer account permanently from database.
+     * All past booking records remain archived for admin reporting.
+     */
+    public function destroy(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Administrator account cannot be deleted from here
+        if ($user->isAdmin()) {
+            return back()->with('error', 'Akun Administrator tidak dapat dihapus melalui fitur ini.');
+        }
+
+        // 1. Snapshot customer name & phone on all their bookings so admin history is fully preserved
+        Booking::where('user_id', $user->id)->update([
+            'customer_name' => $user->name,
+            'customer_phone' => $user->phone,
+            'user_id' => null,
+        ]);
+
+        // 2. Delete avatar file from storage if exists
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // 3. Logout and invalidate session
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // 4. Delete user permanently from database
+        $user->delete();
+
+        return redirect()->route('login')
+            ->with('success', 'Akun Anda telah berhasil dihapus dari sistem. Silakan buat akun baru jika ingin melakukan pemesanan lapangan kembali.');
     }
 }

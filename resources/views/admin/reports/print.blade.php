@@ -136,7 +136,7 @@
                         <tr>
                             <td class="px-2.5 py-2 text-center text-slate-500">{{ $idx + 1 }}</td>
                             <td class="px-2.5 py-2 font-mono font-bold text-slate-900 whitespace-nowrap">{{ $item->booking_code }}</td>
-                            <td class="px-2.5 py-2 font-semibold text-slate-800">{{ $item->user->name }}</td>
+                            <td class="px-2.5 py-2 font-semibold text-slate-800">{{ $item->customer_name }}</td>
                             <td class="px-2.5 py-2 text-slate-700">{{ $item->field->name }}</td>
                             <td class="px-2.5 py-2 text-slate-800 whitespace-nowrap">{{ $item->booking_date->format('d/m/Y') }}</td>
                             <td class="px-2.5 py-2 text-slate-600">

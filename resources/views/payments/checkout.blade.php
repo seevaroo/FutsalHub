@@ -4,20 +4,12 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Top Action Bar (Back & Cancel) -->
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <!-- Top Action Bar (Back) -->
+    <div class="flex items-center justify-between gap-3 mb-6">
         <a href="{{ route('booking.create', $booking->field_id) }}" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 shadow-xs transition-colors">
             <i class="fa-solid fa-arrow-left"></i>
             <span>Kembali ke Pemilihan Jadwal</span>
         </a>
-
-        <form method="POST" action="{{ route('payment.cancel', $booking->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Jam bermain yang sudah Anda pilih akan dilepaskan kembali.')">
-            @csrf
-            <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200 transition-colors cursor-pointer shadow-xs">
-                <i class="fa-solid fa-ban text-[11px]"></i>
-                <span>Batalkan Pemesanan Ini</span>
-            </button>
-        </form>
     </div>
 
     <!-- Header -->
@@ -191,7 +183,7 @@
 
                     <div class="flex justify-between items-center text-slate-600">
                         <span>Nama Pemesan:</span>
-                        <strong class="text-slate-900 font-bold">{{ $booking->user->name }}</strong>
+                        <strong class="text-slate-900 font-bold">{{ $booking->customer_name }}</strong>
                     </div>
 
                     <div class="flex justify-between items-center text-slate-600">

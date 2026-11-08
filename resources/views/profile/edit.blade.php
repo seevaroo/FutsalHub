@@ -120,13 +120,68 @@
             </div>
         </div>
 
-        <!-- Submit Button -->
-        <div class="flex items-center justify-end gap-3 pt-2">
-            <button type="submit" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Pembaruan Profil
+        <!-- Bottom Action Bar: Hapus Akun (Kiri) & Simpan Perubahan (Kanan) -->
+        <div class="flex items-center justify-between gap-3 pt-3">
+            <div>
+                @if(!$user->isAdmin())
+                    <button type="button" onclick="openDeleteAccountModal()" 
+                        class="px-4 py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-extrabold text-xs rounded-xl border border-rose-200 hover:border-rose-600 transition-all flex items-center gap-2 cursor-pointer shadow-xs">
+                        <i class="fa-regular fa-trash-can"></i>
+                        <span>Hapus Akun Saya</span>
+                    </button>
+                @endif
+            </div>
+
+            <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Simpan Pembaruan Profil</span>
             </button>
         </div>
     </form>
+
+    @if(!$user->isAdmin())
+        <!-- Modal Konfirmasi Hapus Akun -->
+        <div id="deleteAccountModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+                <div class="text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4 border border-rose-100">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+
+                    <h3 class="text-lg font-black text-slate-900 mb-2">Hapus Akun Permanen</h3>
+
+                    <p class="text-xs text-slate-600 leading-relaxed text-justify sm:text-center">
+                        Setelah akun Anda dihapus, seluruh data login Anda akan dihapus secara permanen dari sistem. Anda harus mendaftar akun baru jika ingin melakukan reservasi lapangan kembali. Seluruh catatan riwayat pemesanan yang pernah Anda lakukan akan tetap tersimpan dan diarsipkan di sistem admin.
+                    </p>
+
+                    <div class="mt-4 p-3 rounded-xl bg-rose-50/80 border border-rose-200 text-center">
+                        <p class="text-[11px] font-bold text-rose-700 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i>
+                            <span>Tindakan ini tidak dapat dibatalkan setelah dikonfirmasi.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2 Pilihan Tombol: Batal & Konfirmasi -->
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="button" onclick="closeDeleteAccountModal()" 
+                        class="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer text-center">
+                        Batal
+                    </button>
+
+                    <form method="POST" action="{{ route('profile.destroy') }}" class="flex-1">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                            class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-600/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                            <span>Konfirmasi</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @push('scripts')
@@ -140,6 +195,28 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    function openDeleteAccountModal() {
+        const modal = document.getElementById('deleteAccountModal');
+        if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDeleteAccountModal() {
+        const modal = document.getElementById('deleteAccountModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    // Tutup modal jika klik di luar area dialog
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('deleteAccountModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeDeleteAccountModal();
+                }
+            });
+        }
+    });
 </script>
 @endpush
 @endsection

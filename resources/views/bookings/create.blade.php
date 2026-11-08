@@ -51,12 +51,18 @@
                         </div>
                     </div>
 
+                    @php
+                        $todayDate = now()->setTimezone('Asia/Jakarta')->toDateString();
+                        $currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
+                        $initialDate = old('booking_date', $todayDate);
+                    @endphp
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="booking_date" class="block text-xs font-bold text-slate-700 mb-1.5">Pilih Tanggal:</label>
                             <input type="date" id="booking_date" name="booking_date" 
-                                value="{{ old('booking_date', date('Y-m-d')) }}" 
-                                min="{{ date('Y-m-d') }}"
+                                value="{{ $initialDate }}" 
+                                min="{{ $todayDate }}"
                                 required
                                 class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 font-semibold text-slate-800">
                         </div>
@@ -101,13 +107,21 @@
 
                     <!-- Slots Grid -->
                     <div id="slotsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        @php $hasVisibleSlots = false; @endphp
                         @foreach($timeSlots as $slot)
-                            <label id="slot-card-{{ $slot->id }}" class="slot-card relative flex flex-col p-3 rounded-xl border border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50 cursor-pointer transition-all duration-200 select-none group">
+                            @php
+                                $isPastSlot = ($initialDate === $todayDate && $slot->start_time <= $currentTime);
+                                if (!$isPastSlot) {
+                                    $hasVisibleSlots = true;
+                                }
+                            @endphp
+                            <label id="slot-card-{{ $slot->id }}" class="slot-card relative flex flex-col p-3 rounded-xl border border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50 cursor-pointer transition-all duration-200 select-none group {{ $isPastSlot ? 'hidden' : '' }}">
                                 <input type="checkbox" name="slots[]" value="{{ $slot->id }}" 
                                     data-start="{{ substr($slot->start_time, 0, 5) }}" 
                                     data-end="{{ substr($slot->end_time, 0, 5) }}"
                                     data-price="{{ $field->price_per_hour }}"
                                     class="slot-checkbox sr-only"
+                                    {{ $isPastSlot ? 'disabled' : '' }}
                                     onchange="handleSlotChange(this)">
 
                                 <div class="flex items-center justify-between mb-1.5">
@@ -123,6 +137,15 @@
                                 </div>
                             </label>
                         @endforeach
+
+                        <!-- Empty State if all slots are past/unavailable -->
+                        <div id="noSlotsAlert" class="{{ $hasVisibleSlots ? 'hidden' : '' }} col-span-full py-10 px-4 text-center bg-slate-50 border border-slate-200 rounded-xl">
+                            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-800">Semua Jam Operasional Hari Ini Sudah Lewat</h3>
+                            <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Tidak ada slot jam bermain yang tersisa untuk tanggal ini. Silakan pilih tanggal besok atau hari berikutnya di atas.</p>
+                        </div>
                     </div>
 
                     @error('slots')
@@ -233,30 +256,60 @@
             const data = await response.json();
 
             const bookedIds = (data.booked_slots || []).map(Number);
+            const expiredIds = (data.expired_slots || []).map(Number);
+
+            let visibleCount = 0;
 
             // Update slot cards in UI
             document.querySelectorAll('.slot-checkbox').forEach(cb => {
                 const slotId = Number(cb.value);
                 const card = document.getElementById(`slot-card-${slotId}`);
+                if (!card) return;
                 const badge = card.querySelector('.slot-badge');
 
                 // Reset selection
                 cb.checked = false;
 
-                if (bookedIds.includes(slotId)) {
-                    // Mark as Booked / Disabled
+                if (expiredIds.includes(slotId)) {
+                    // Sembunyikan slot jam yang sudah lewat waktu sekarang
                     cb.disabled = true;
-                    card.className = 'slot-card relative flex flex-col p-3 rounded-xl border border-slate-200 bg-slate-100/90 text-slate-400 cursor-not-allowed select-none opacity-60';
-                    badge.className = 'slot-badge inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600';
-                    badge.textContent = 'Terisi';
+                    card.classList.add('hidden');
                 } else {
-                    // Mark as Available
-                    cb.disabled = false;
-                    card.className = 'slot-card relative flex flex-col p-3 rounded-xl border border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50 cursor-pointer transition-all duration-200 select-none group';
-                    badge.className = 'slot-badge inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
-                    badge.textContent = 'Tersedia';
+                    card.classList.remove('hidden');
+                    visibleCount++;
+
+                    if (bookedIds.includes(slotId)) {
+                        // Mark as Booked / Disabled
+                        cb.disabled = true;
+                        card.className = 'slot-card relative flex flex-col p-3 rounded-xl border border-slate-200 bg-slate-100/90 text-slate-400 cursor-not-allowed select-none opacity-60';
+                        badge.className = 'slot-badge inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600';
+                        badge.textContent = 'Terisi';
+                        card.querySelector('.slot-time-text').classList.remove('text-white');
+                        card.querySelector('.slot-time-text').classList.add('text-slate-800');
+                        card.querySelector('.slot-price-text').classList.remove('text-white', 'text-emerald-100');
+                        card.querySelector('.slot-price-text').classList.add('text-slate-500');
+                    } else {
+                        // Mark as Available
+                        cb.disabled = false;
+                        card.className = 'slot-card relative flex flex-col p-3 rounded-xl border border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50 cursor-pointer transition-all duration-200 select-none group';
+                        badge.className = 'slot-badge inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+                        badge.textContent = 'Tersedia';
+                        card.querySelector('.slot-time-text').classList.remove('text-white');
+                        card.querySelector('.slot-time-text').classList.add('text-slate-800');
+                        card.querySelector('.slot-price-text').classList.remove('text-white', 'text-emerald-100');
+                        card.querySelector('.slot-price-text').classList.add('text-slate-500');
+                    }
                 }
             });
+
+            const noSlotsAlert = document.getElementById('noSlotsAlert');
+            if (noSlotsAlert) {
+                if (visibleCount === 0) {
+                    noSlotsAlert.classList.remove('hidden');
+                } else {
+                    noSlotsAlert.classList.add('hidden');
+                }
+            }
 
             updateSummary();
         } catch (error) {

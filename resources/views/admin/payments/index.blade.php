@@ -77,8 +77,8 @@
 
                                 <!-- Customer -->
                                 <td class="px-4 py-4">
-                                    <span class="font-bold text-slate-900 block">{{ $booking->user->name }}</span>
-                                    <span class="text-[10px] text-slate-500">{{ $booking->user->phone }}</span>
+                                    <span class="font-bold text-slate-900 block">{{ $booking->customer_name }}</span>
+                                    <span class="text-[10px] text-slate-500">{{ $booking->customer_phone }}</span>
                                 </td>
 
                                 <!-- Field & Schedule -->
@@ -120,7 +120,7 @@
                                     @if($booking->payment && $booking->payment->proof_image)
                                         <div class="inline-flex items-center gap-1.5">
                                             <button type="button" 
-                                                onclick="openProofModal('{{ asset('storage/' . $booking->payment->proof_image) }}', '{{ $booking->booking_code }}', '{{ $booking->user->name }}', '{{ $booking->formatted_total }}')"
+                                                onclick="openProofModal('{{ asset('storage/' . $booking->payment->proof_image) }}', '{{ $booking->booking_code }}', '{{ addslashes($booking->customer_name) }}', '{{ $booking->formatted_total }}')"
                                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold transition-colors cursor-pointer group"
                                                 title="Pratinjau Bukti Transfer">
                                                 <i class="fa-regular fa-image text-xs group-hover:scale-110 transition-transform"></i>

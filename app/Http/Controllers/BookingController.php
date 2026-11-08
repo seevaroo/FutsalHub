@@ -49,13 +49,27 @@ class BookingController extends Controller
             $query->where('field_id', $fieldId)
                   ->where('booking_date', $date)
                   ->whereIn('status', ['pending', 'confirmed', 'completed']);
-        })->pluck('slot_id')->unique()->values();
+        })->pluck('slot_id')->unique()->values()->toArray();
+
+        // Check for expired slots if booking is for today (Asia/Jakarta timezone)
+        $todayDate = now()->setTimezone('Asia/Jakarta')->toDateString();
+        $expiredSlots = [];
+
+        if ($date === $todayDate) {
+            $currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
+            // Slot dianggap expired jika jam mulai (start_time) sudah lewat dari jam sekarang
+            $expiredSlots = TimeSlot::where('start_time', '<=', $currentTime)
+                ->pluck('id')
+                ->toArray();
+        }
 
         return response()->json([
             'status' => 'success',
             'field_id' => (int) $fieldId,
             'date' => $date,
+            'is_today' => ($date === $todayDate),
             'booked_slots' => $bookedSlots,
+            'expired_slots' => $expiredSlots,
         ]);
     }
 
@@ -86,6 +100,19 @@ class BookingController extends Controller
         $bookingDate = $validated['booking_date'];
         $selectedSlots = array_unique($validated['slots']);
 
+        // Check if booking date is today, ensure none of the selected slots have expired
+        $todayDate = now()->setTimezone('Asia/Jakarta')->toDateString();
+        if ($bookingDate === $todayDate) {
+            $currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
+            $hasExpiredSlots = TimeSlot::whereIn('id', $selectedSlots)
+                ->where('start_time', '<=', $currentTime)
+                ->exists();
+
+            if ($hasExpiredSlots) {
+                return back()->with('error', 'Jam bermain yang Anda pilih sudah terlewat waktu operasionalnya. Silakan pilih jam berikutnya.')->withInput();
+            }
+        }
+
         try {
             $booking = DB::transaction(function () use ($field, $bookingDate, $selectedSlots) {
                 // Pessimistic locking: check if any of the chosen slots are already taken
@@ -114,6 +141,8 @@ class BookingController extends Controller
                 $newBooking = Booking::create([
                     'booking_code' => $bookingCode,
                     'user_id' => Auth::id(),
+                    'customer_name' => Auth::user()->name,
+                    'customer_phone' => Auth::user()->phone,
                     'field_id' => $field->id,
                     'booking_date' => $bookingDate,
                     'total_price' => $totalPrice,

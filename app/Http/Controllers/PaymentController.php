@@ -129,6 +129,7 @@ class PaymentController extends Controller
         // Mark booking as cancelled, freeing up the time slots
         $booking->update([
             'status' => 'cancelled',
+            'cancelled_by' => 'user',
         ]);
 
         if ($request->query('redirect_to') === 'my_bookings') {

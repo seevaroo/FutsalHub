@@ -141,13 +141,134 @@
             </div>
 
             <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Date -->
                 <div class="text-right hidden sm:block">
                     <span class="text-xs font-semibold text-slate-600"><i class="fa-regular fa-calendar-days text-emerald-600 mr-1.5"></i> {{ date('l, d F Y') }}</span>
                 </div>
                 <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                
+                <!-- Status Badge -->
+                <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Booking Online Buka
                 </span>
+
+                <!-- Notification Bell Dropdown -->
+                @auth
+                    @if(auth()->user()->isCustomer())
+                        <div class="relative" id="notifDropdownWrapper">
+                            <button type="button" onclick="toggleNotificationDropdown()" 
+                                class="relative w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center cursor-pointer border border-slate-200 focus:outline-none"
+                                title="Notifikasi Verifikasi Booking">
+                                <i class="fa-regular fa-bell text-sm"></i>
+                                @if(isset($customerNotifications) && $customerNotifications->isNotEmpty())
+                                    <span id="notifBadgeCounter" class="absolute -top-1 -right-1 flex h-4 w-4">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-600 text-[9px] font-black text-white items-center justify-center">
+                                            {{ $customerNotifications->count() }}
+                                        </span>
+                                    </span>
+                                @endif
+                            </button>
+
+                            <!-- Notification Panel -->
+                            <div id="notifDropdownMenu" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                                <div class="px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-bell text-emerald-600 text-xs"></i>
+                                        <span class="text-xs font-extrabold text-slate-900">Notifikasi Booking</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                                        {{ isset($customerNotifications) ? $customerNotifications->count() : 0 }} Pemberitahuan
+                                    </span>
+                                </div>
+
+                                <div class="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                                    @if(isset($customerNotifications) && $customerNotifications->isNotEmpty())
+                                        @foreach($customerNotifications as $notifBooking)
+                                            @php
+                                                $isConfirmed = in_array($notifBooking->status, ['confirmed', 'completed']);
+                                                $isRejectedByAdmin = ($notifBooking->status === 'cancelled' && $notifBooking->cancelled_by === 'admin');
+                                            @endphp
+
+                                            <a href="{{ route('booking.show', $notifBooking->id) }}" class="p-3.5 hover:bg-slate-50 flex items-start gap-3 transition-colors block group">
+                                                @if($isConfirmed)
+                                                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                                                        <i class="fa-solid fa-circle-check text-sm"></i>
+                                                    </div>
+                                                    <div class="flex-1 overflow-hidden">
+                                                        <div class="flex items-center justify-between gap-2">
+                                                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Booking Dikonfirmasi!</span>
+                                                            <span class="text-[10px] text-slate-400 font-medium whitespace-nowrap">{{ $notifBooking->updated_at->diffForHumans() }}</span>
+                                                        </div>
+                                                        <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                                                            Pesanan <strong class="text-slate-800 font-mono">{{ $notifBooking->booking_code }}</strong> ({{ $notifBooking->field->name }}) telah diverifikasi &amp; disetujui.
+                                                        </p>
+                                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 mt-1">
+                                                            <i class="fa-solid fa-receipt text-[9px]"></i> Lihat di Riwayat Booking &rarr;
+                                                        </span>
+                                                    </div>
+                                                @elseif($isRejectedByAdmin)
+                                                    <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                                                        <i class="fa-solid fa-circle-xmark text-sm"></i>
+                                                    </div>
+                                                    <div class="flex-1 overflow-hidden">
+                                                        <div class="flex items-center justify-between gap-2">
+                                                            <span class="text-xs font-bold text-rose-700 transition-colors">Booking Ditolak Admin</span>
+                                                            <span class="text-[10px] text-slate-400 font-medium whitespace-nowrap">{{ $notifBooking->updated_at->diffForHumans() }}</span>
+                                                        </div>
+                                                        <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                                                            Pesanan <strong class="text-slate-800 font-mono">{{ $notifBooking->booking_code }}</strong> ({{ $notifBooking->field->name }}) ditolak oleh admin.
+                                                        </p>
+                                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 mt-1">
+                                                            <i class="fa-solid fa-circle-info text-[9px]"></i> Lihat Detail Pembatalan &rarr;
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                                                        <i class="fa-solid fa-ban text-sm"></i>
+                                                    </div>
+                                                    <div class="flex-1 overflow-hidden">
+                                                        <div class="flex items-center justify-between gap-2">
+                                                            <span class="text-xs font-bold text-slate-800 group-hover:text-amber-700 transition-colors">Booking Dibatalkan</span>
+                                                            <span class="text-[10px] text-slate-400 font-medium whitespace-nowrap">{{ $notifBooking->updated_at->diffForHumans() }}</span>
+                                                        </div>
+                                                        <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                                                            Pesanan <strong class="text-slate-800 font-mono">{{ $notifBooking->booking_code }}</strong> ({{ $notifBooking->field->name }}) telah dibatalkan.
+                                                        </p>
+                                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 mt-1">
+                                                            <i class="fa-solid fa-receipt text-[9px]"></i> Lihat Detail &rarr;
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </a>
+                                        @endforeach
+                                    @else
+                                        <div class="p-6 text-center text-slate-400">
+                                            <i class="fa-regular fa-bell-slash text-2xl mb-2 text-slate-300 block"></i>
+                                            <p class="text-xs font-medium">Belum ada notifikasi baru.</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="px-4 py-2 border-t border-slate-100 bg-slate-50/60 text-center">
+                                    <a href="{{ route('booking.my') }}" class="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1">
+                                        <span>Buka Semua Riwayat Booking</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endauth
+
+                <!-- Profile Avatar on Top Right -->
+                <div class="h-6 w-px bg-slate-200"></div>
+                @auth
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 hover:bg-slate-100 p-1 rounded-xl transition-colors" title="Pengaturan Profil">
+                        <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-500/40 shadow-xs">
+                        <span class="text-xs font-bold text-slate-700 hidden sm:inline">{{ auth()->user()->name }}</span>
+                    </a>
+                @endauth
             </div>
         </header>
 
@@ -218,6 +339,54 @@
         </footer>
     </div>
 
+    <script>
+        const CURRENT_USER_ID = {{ auth()->check() ? auth()->id() : 'null' }};
+        const STORAGE_KEY = CURRENT_USER_ID ? `futsalhub_last_seen_notif_${CURRENT_USER_ID}` : null;
+        const LATEST_NOTIF_TIME = {{ (isset($customerNotifications) && $customerNotifications->isNotEmpty()) ? $customerNotifications->first()->updated_at->timestamp : 0 }};
+
+        // Check on page load if user already viewed current notifications
+        document.addEventListener('DOMContentLoaded', function() {
+            const badge = document.getElementById('notifBadgeCounter');
+            if (badge && STORAGE_KEY) {
+                const lastSeenTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+                // If user already viewed at or after latest notification timestamp, hide badge
+                if (lastSeenTime >= LATEST_NOTIF_TIME) {
+                    badge.classList.add('hidden');
+                }
+            }
+        });
+
+        function toggleNotificationDropdown() {
+            const menu = document.getElementById('notifDropdownMenu');
+            const badge = document.getElementById('notifBadgeCounter');
+
+            if (menu) {
+                const willOpen = menu.classList.contains('hidden');
+                menu.classList.toggle('hidden');
+
+                // When user opens notification dropdown, mark as read and hide counter badge
+                if (willOpen) {
+                    if (badge) {
+                        badge.classList.add('hidden');
+                    }
+                    if (STORAGE_KEY) {
+                        // Save current timestamp or latest notification timestamp to localStorage
+                        const nowTs = Math.floor(Date.now() / 1000);
+                        localStorage.setItem(STORAGE_KEY, Math.max(nowTs, LATEST_NOTIF_TIME));
+                    }
+                }
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('notifDropdownWrapper');
+            const menu = document.getElementById('notifDropdownMenu');
+            if (wrapper && menu && !wrapper.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

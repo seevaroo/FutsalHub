@@ -23,6 +23,8 @@ class PaymentVerificationController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('booking_code', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%")
                   ->orWhereHas('user', function ($uq) use ($search) {
                       $uq->where('name', 'like', "%{$search}%")
                          ->orWhere('phone', 'like', "%{$search}%");
@@ -87,6 +89,7 @@ class PaymentVerificationController extends Controller
 
         $booking->update([
             'status' => 'cancelled',
+            'cancelled_by' => 'admin',
         ]);
 
         return redirect()->back()
