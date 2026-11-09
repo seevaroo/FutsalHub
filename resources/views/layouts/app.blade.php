@@ -51,7 +51,7 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen flex antialiased">
 
     <!-- Customer Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800 sticky top-0 h-screen print:hidden">
+    <aside class="hidden md:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0 min-h-screen border-r border-slate-800 sticky top-0 h-screen print:hidden">
         <!-- Brand Header -->
         <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-800">
             <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-9 h-9 object-contain">
@@ -140,10 +140,18 @@
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen print:h-auto print:overflow-visible">
         <!-- Top Minimal Header Bar -->
-        <header class="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs shrink-0 print:hidden">
-            <div>
-                <h2 class="text-base sm:text-lg font-bold text-slate-800">@yield('page_title', 'FutsalHub Customer Arena')</h2>
-                <p class="text-[11px] text-slate-500 hidden sm:block">Reservasi Lapangan Futsal Standar Internasional</p>
+        <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs shrink-0 print:hidden">
+            <div class="flex items-center gap-3">
+                <!-- Mobile Brand Header (Tampil khusus di layar mobile karena sidebar disembunyikan) -->
+                <a href="{{ route('home') }}" class="md:hidden flex items-center gap-2">
+                    <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-8 h-8 object-contain">
+                    <span class="text-sm font-extrabold text-slate-900 tracking-tight">Futsal<span class="text-emerald-500">Hub</span></span>
+                </a>
+
+                <div class="hidden md:block">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800">@yield('page_title', 'FutsalHub Customer Arena')</h2>
+                    <p class="text-[11px] text-slate-500 hidden sm:block">Reservasi Lapangan Futsal Standar Internasional</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-3 sm:gap-4">
@@ -328,12 +336,12 @@
         @endif
 
         <!-- Main Content Area -->
-        <main class="flex-1 pb-16 print:pb-0 print:overflow-visible">
+        <main class="flex-1 pb-24 md:pb-16 print:pb-0 print:overflow-visible">
             @yield('content')
         </main>
 
         <!-- Footer -->
-        <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800 py-6 px-6 sm:px-8 mt-auto shrink-0 print:hidden">
+        <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800 py-6 px-4 sm:px-6 lg:px-8 mb-16 md:mb-0 mt-auto shrink-0 print:hidden">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-6 h-6 object-contain">
@@ -357,6 +365,42 @@
             </div>
         </footer>
     </div>
+
+    <!-- Mobile Bottom Navigation Bar (Thumb-Friendly, md:hidden) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 border-t border-slate-800 backdrop-blur-md px-3 py-2 md:hidden flex items-center justify-around shadow-2xl print:hidden">
+        <!-- 1. Home -->
+        <a href="{{ route('home') }}" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-colors {{ request()->routeIs('home') ? 'text-emerald-400 font-extrabold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-house text-sm {{ request()->routeIs('home') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+            <span class="text-[10px]">Home</span>
+        </a>
+
+        <!-- 2. Katalog -->
+        <a href="{{ route('catalog') }}" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-colors {{ request()->routeIs('catalog') ? 'text-emerald-400 font-extrabold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-futbol text-sm {{ request()->routeIs('catalog') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+            <span class="text-[10px]">Katalog</span>
+        </a>
+
+        <!-- 3. History Booking -->
+        <a href="{{ route('booking.my') }}" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-colors {{ request()->routeIs('booking.my*') ? 'text-emerald-400 font-extrabold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-receipt text-sm {{ request()->routeIs('booking.my*') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+            <span class="text-[10px]">Riwayat</span>
+        </a>
+
+        <!-- 4. Settings -->
+        <a href="{{ route('profile.edit') }}" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-colors {{ request()->routeIs('profile.*') ? 'text-emerald-400 font-extrabold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-gear text-sm {{ request()->routeIs('profile.*') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+            <span class="text-[10px]">Settings</span>
+        </a>
+
+        @auth
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-colors text-amber-400 hover:text-amber-300">
+                    <i class="fa-solid fa-gauge-high text-sm text-amber-400"></i>
+                    <span class="text-[10px] font-bold">Admin</span>
+                </a>
+            @endif
+        @endauth
+    </nav>
 
     <script>
         const CURRENT_USER_ID = {{ auth()->check() ? auth()->id() : 'null' }};

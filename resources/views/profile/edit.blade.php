@@ -121,18 +121,18 @@
         </div>
 
         <!-- Bottom Action Bar: Hapus Akun (Kiri) & Simpan Perubahan (Kanan) -->
-        <div class="flex items-center justify-between gap-3 pt-3">
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-3">
             <div>
                 @if(!$user->isAdmin())
                     <button type="button" onclick="openDeleteAccountModal()" 
-                        class="px-4 py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-extrabold text-xs rounded-xl border border-rose-200 hover:border-rose-600 transition-all flex items-center gap-2 cursor-pointer shadow-xs">
+                        class="w-full sm:w-auto justify-center px-4 py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-extrabold text-xs rounded-xl border border-rose-200 hover:border-rose-600 transition-all flex items-center gap-2 cursor-pointer shadow-xs">
                         <i class="fa-regular fa-trash-can"></i>
                         <span>Hapus Akun Saya</span>
                     </button>
                 @endif
             </div>
 
-            <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2 cursor-pointer">
+            <button type="submit" class="w-full sm:w-auto justify-center px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-floppy-disk"></i>
                 <span>Simpan Pembaruan Profil</span>
             </button>

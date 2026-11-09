@@ -50,15 +50,24 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased">
 
-    <!-- Admin Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800">
+    <!-- Mobile Backdrop Overlay -->
+    <div id="adminSidebarBackdrop" onclick="toggleAdminMobileSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- Admin Sidebar Navigation (Desktop Static & Mobile Drawer) -->
+    <aside id="adminSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800 transform -translate-x-full md:translate-x-0 md:static md:sticky md:top-0 md:h-screen transition-transform duration-300 ease-in-out">
         <!-- Brand Header -->
-        <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-800">
-            <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-9 h-9 object-contain">
-            <div>
-                <h1 class="text-base font-extrabold text-white tracking-tight">Futsal<span class="text-emerald-400">Hub</span></h1>
-                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Admin Control</span>
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-9 h-9 object-contain">
+                <div>
+                    <h1 class="text-base font-extrabold text-white tracking-tight">Futsal<span class="text-emerald-400">Hub</span></h1>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Admin Control</span>
+                </div>
             </div>
+            <!-- Mobile Close Button -->
+            <button type="button" onclick="toggleAdminMobileSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg" title="Tutup Menu">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
         </div>
 
         <!-- Navigation Links -->
@@ -119,10 +128,23 @@
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <!-- Top Header Bar -->
-        <header class="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-            <div>
-                <h2 class="text-lg font-bold text-slate-800">@yield('page_title', 'Dashboard')</h2>
-                <p class="text-xs text-slate-500 hidden sm:block">Panel Kontrol Reservasi Lapangan FutsalHub</p>
+        <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <div class="flex items-center gap-3">
+                <!-- Hamburger Button (Mobile Only) -->
+                <button type="button" onclick="toggleAdminMobileSidebar()" class="md:hidden w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center cursor-pointer border border-slate-200 focus:outline-none" title="Buka Menu Admin">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+
+                <!-- Mobile Brand Header -->
+                <div class="md:hidden flex items-center gap-2">
+                    <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-7 h-7 object-contain">
+                    <span class="text-sm font-extrabold text-slate-900 tracking-tight">Admin<span class="text-emerald-500">Hub</span></span>
+                </div>
+
+                <div class="hidden md:block">
+                    <h2 class="text-lg font-bold text-slate-800">@yield('page_title', 'Dashboard')</h2>
+                    <p class="text-xs text-slate-500 hidden sm:block">Panel Kontrol Reservasi Lapangan FutsalHub</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-3 sm:gap-4">
@@ -220,6 +242,24 @@
                 setTimeout(() => {
                     toast.remove();
                 }, 500);
+            }
+        }
+
+        // Toggle Admin Mobile Drawer Sidebar
+        function toggleAdminMobileSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const backdrop = document.getElementById('adminSidebarBackdrop');
+            if (sidebar && backdrop) {
+                const isOpen = !sidebar.classList.contains('-translate-x-full');
+                if (isOpen) {
+                    sidebar.classList.add('-translate-x-full');
+                    backdrop.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    backdrop.classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
+                }
             }
         }
     </script>

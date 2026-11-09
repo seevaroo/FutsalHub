@@ -40,7 +40,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:p-0 print:max-w-none">
     <!-- Top Bar Navigation & Print Action -->
-    <div class="flex items-center justify-between mb-6 print:hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 print:hidden">
         <a href="{{ route('booking.my') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-emerald-600 transition-colors">
             <i class="fa-solid fa-arrow-left"></i> Kembali ke Riwayat
         </a>
