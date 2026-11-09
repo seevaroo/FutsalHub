@@ -324,16 +324,25 @@
 
         <!-- Footer -->
         <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800 py-6 px-6 sm:px-8 mt-auto shrink-0 print:hidden">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-6 h-6 object-contain">
                     <span class="text-sm font-extrabold text-white">Futsal<span class="text-emerald-400">Hub</span> Arena</span>
-                    <span class="text-slate-600">•</span>
-                    <span class="text-slate-500 text-[11px]">&copy; {{ date('Y') }} Uji Kompetensi Keahlian (LSP SMK RPL)</span>
+                    <span class="text-slate-600 hidden sm:inline">•</span>
+                    <span class="text-slate-500 text-[11px] hidden sm:inline">&copy; {{ date('Y') }} Uji Kompetensi Keahlian (LSP SMK RPL)</span>
                 </div>
-                <div class="flex items-center gap-4 text-[11px] text-slate-400">
-                    <span><i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i> 0812-3456-7890</span>
-                    <span><i class="fa-solid fa-location-dot text-emerald-400 mr-1"></i> Arena Indoor Blok A</span>
+                <div class="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-300">
+                    <span class="flex items-center gap-1.5 font-medium">
+                        <i class="fa-regular fa-clock text-emerald-400"></i> 08.00 - 22.00 WIB
+                    </span>
+                    <span class="text-slate-700 hidden sm:inline">•</span>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="flex items-center gap-1.5 font-medium hover:text-emerald-400 transition-colors">
+                        <i class="fa-brands fa-whatsapp text-emerald-400"></i> 0812-3456-7890
+                    </a>
+                    <span class="text-slate-700 hidden sm:inline">•</span>
+                    <span class="flex items-center gap-1.5 font-medium">
+                        <i class="fa-solid fa-location-dot text-emerald-400"></i> Jl. Pemuda Futsal Arena No. 10 (Arena Indoor Blok A)
+                    </span>
                 </div>
             </div>
         </footer>

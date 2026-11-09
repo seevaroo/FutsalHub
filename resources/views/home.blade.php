@@ -4,46 +4,19 @@
 
 @section('content')
 <!-- Hero Section -->
-<div class="relative bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white overflow-hidden py-14 sm:py-20 border-b border-slate-800">
-    <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="max-w-3xl">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+    <div class="relative bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white rounded-3xl overflow-hidden py-12 sm:py-16 px-6 sm:px-10 lg:px-12 shadow-xl border border-slate-800/80">
+        <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
+        <div class="relative z-10 max-w-3xl">
             <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-4">
                 <i class="fa-solid fa-trophy text-amber-400"></i> Arena Futsal Modern Standar Nasional
             </span>
             <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4">
                 Mainkan Pertandingan Terbaik di <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">FutsalHub</span>
             </h1>
-            <p class="text-sm sm:text-base text-slate-300 mb-8 leading-relaxed">
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
                 Pilih lapangan favorit Anda dengan lantai Vinyl, Rumput Sintetis, atau Interlock. Cek ketersediaan jam operasional secara real-time dan pesan langsung tanpa ribet!
             </p>
-
-            <!-- Informasi Jam Operasional, Lokasi & Kontak -->
-            <div class="flex flex-wrap items-center gap-y-2 gap-x-3.5 text-xs text-slate-300 mb-6 bg-slate-800/80 border border-slate-700/80 backdrop-blur px-4 py-3 rounded-2xl w-fit shadow-lg">
-                <span class="flex items-center gap-1.5 font-medium">
-                    <i class="fa-solid fa-clock text-emerald-400"></i> Jam Operasional: <strong class="text-white">08.00 - 22.00 WIB</strong>
-                </span>
-                <span class="hidden sm:inline text-slate-600">•</span>
-                <span class="flex items-center gap-1.5 font-medium">
-                    <i class="fa-solid fa-map-pin text-emerald-400"></i> Jl. Pemuda Futsal Arena No. 10
-                </span>
-                <span class="hidden sm:inline text-slate-600">•</span>
-                <a href="https://wa.me/6281234567890" target="_blank" class="flex items-center gap-1.5 font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
-                    <i class="fa-brands fa-whatsapp text-sm"></i> +62 812-3456-7890
-                </a>
-            </div>
-            
-            <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300">
-                <div class="flex items-center gap-2 bg-slate-800/80 backdrop-blur px-3 py-2 rounded-xl border border-slate-700">
-                    <i class="fa-solid fa-check-double text-emerald-400"></i> Bebas Double-Booking
-                </div>
-                <div class="flex items-center gap-2 bg-slate-800/80 backdrop-blur px-3 py-2 rounded-xl border border-slate-700">
-                    <i class="fa-solid fa-qrcode text-emerald-400"></i> Pembayaran QRIS & Cash
-                </div>
-                <div class="flex items-center gap-2 bg-slate-800/80 backdrop-blur px-3 py-2 rounded-xl border border-slate-700">
-                    <i class="fa-solid fa-shower text-emerald-400"></i> Fasilitas Lengkap
-                </div>
-            </div>
         </div>
     </div>
 </div>
