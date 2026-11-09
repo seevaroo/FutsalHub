@@ -36,8 +36,9 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Halaman Katalog / Home Utama (setelah login)
+// Halaman Beranda Utama & Katalog Lapangan
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/katalog', [HomeController::class, 'catalog'])->name('catalog')->middleware('auth');
 
 // Profile routes (Customer & Admin)
 Route::middleware('auth')->group(function () {

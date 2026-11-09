@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Requirement Document (PRD) - FutsalHub</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm 20mm 15mm;
+            @bottom-right {
+                content: "Halaman " counter(page);
+                font-size: 9pt;
+                color: #64748b;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            background-color: #ffffff;
+            line-height: 1.6;
+            font-size: 10pt;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            page-break-after: always;
+            padding: 40px 20px 20px 20px;
+            background: linear-gradient(145deg, #022c22 0%, #0f172a 60%, #020617 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+
+        .cover-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cover-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cover-body {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .cover-title {
+            font-size: 34pt;
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .cover-title span {
+            color: #10b981;
+        }
+
+        .cover-subtitle {
+            font-size: 15pt;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-bottom: 24px;
+            max-width: 600px;
+            line-height: 1.4;
+        }
+
+        .cover-divider {
+            width: 80px;
+            height: 4px;
+            background: #10b981;
+            border-radius: 2px;
+            margin-bottom: 24px;
+        }
+
+        .cover-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            border-radius: 12px;
+            max-width: 520px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 8pt;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 10pt;
+            color: #f8fafc;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .cover-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            font-size: 8.5pt;
+            color: #64748b;
+        }
+
+        /* Document Content */
+        .page-break {
+            page-break-after: always;
+        }
+
+        .section {
+            margin-bottom: 28px;
+        }
+
+        h2 {
+            font-size: 16pt;
+            color: #0f172a;
+            font-weight: 800;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 6px;
+            margin-top: 24px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #065f46;
+            font-weight: 700;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        h4 {
+            font-size: 10.5pt;
+            color: #1e293b;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 16px;
+            font-size: 9pt;
+        }
+
+        th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: 700;
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid #0f172a;
+        }
+
+        td {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        /* Callout / Alerts */
+        .callout {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 14px;
+            font-size: 9.5pt;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 4px;
+        }
+
+        .callout-blue {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0284c7;
+        }
+        .callout-blue .callout-title {
+            color: #0369a1;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 8pt;
+            font-weight: 700;
+        }
+        .badge-green { background-color: #dcfce7; color: #166534; }
+        .badge-blue { background-color: #e0f2fe; color: #075985; }
+        .badge-purple { background-color: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background-color: #fef3c7; color: #92400e; }
+
+        /* Grid Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .feature-card-header {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 10pt;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .feature-card-body {
+            font-size: 8.5pt;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .tech-pill {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 8pt;
+            font-weight: 600;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            border: 1px solid #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== COVER PAGE ==================== -->
+    <div class="cover-page">
+        <div class="cover-header">
+            <span class="cover-badge">Software Requirement Specification</span>
+        </div>
+
+        <div class="cover-body">
+            <h1 class="cover-title">Futsal<span>Hub</span></h1>
+            <div class="cover-subtitle">
+                Product Requirements Document (PRD) & Technical Architecture Specification
+            </div>
+            <div class="cover-divider"></div>
+            <p style="color: #cbd5e1; font-size: 10pt; max-width: 550px; line-height: 1.5; margin-bottom: 24px;">
+                Dokumentasi terpadu spesifikasi produk, rasionalisasi pemilihan stack teknologi, arsitektur sistem, dan perincian fitur operasional platform reservasi lapangan futsal modern berbasis web.
+            </p>
+
+            <div class="cover-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Nama Aplikasi</span>
+                    <span class="meta-value">FutsalHub Customer & Admin Arena</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Versi Dokumen</span>
+                    <span class="meta-value">v1.0.0 (Production-Ready)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Framework & Bahasa</span>
+                    <span class="meta-value">Laravel 13 (v13.40.0) / PHP 8.5.12 & Tailwind v4</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Tanggal Rilis</span>
+                    <span class="meta-value">November 2026</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cover-footer">
+            <span>&copy; 2026 FutsalHub Arena Technology. Hak Cipta Dilindungi.</span>
+            <span>Jl. Pemuda Futsal Arena No. 10</span>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 1: RINGKASAN EKSEKUTIF ==================== -->
+    <div class="section">
+        <h2>1. Ringkasan Eksekutif (Executive Summary)</h2>
+        <p>
+            <strong>FutsalHub</strong> adalah platform web reservasi lapangan futsal modern yang dirancang untuk mengotomatisasi seluruh siklus bisnis penyewaan lapangan olahraga. Platform ini menghubungkan pelanggan (pemain/komunitas futsal) dengan pihak pengelola arena (administrator/kasir) melalui antarmuka yang intuitif, cepat, dan transparan.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Tujuan Utama Produk (Product Goals)</div>
+            Meniadakan risiko bentrok jadwal (<em>double-booking</em>), menggantikan pencatatan manual berbasis buku/WhatsApp dengan sistem real-time, memfasilitasi opsi pembayaran multi-kanal (QRIS digital & Cash di kasir), serta menyajikan laporan keuangan dan okupansi lapangan yang akurat bagi pengelola.
+        </div>
+
+        <h3>1.1 Masalah Bisnis & Solusi FutsalHub</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Tantangan Operasional</th>
+                    <th style="width: 35%;">Dampak Negatif Manual</th>
+                    <th style="width: 40%;">Solusi Terintegrasi FutsalHub</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Jadwal Tumpang Tindih</strong></td>
+                    <td>Dua tim datang di jam yang sama akibat kelalaian admin manual; komplain pelanggan tinggi.</td>
+                    <td><strong>Slot Locking Engine</strong>: Slot otomatis terkunci saat reservasi dibuat; validasi ketersediaan real-time hingga level detik.</td>
+                </tr>
+                <tr>
+                    <td><strong>Verifikasi Pembayaran Lambat</strong></td>
+                    <td>Bukti transfer tercecer di chat WhatsApp pribadi kasir tanpa nomor referensi yang jelas.</td>
+                    <td><strong>Dedicated Verification Workflow</strong>: Bukti QRIS tersimpan rapi per ID pesanan lengkap dengan modal inspeksi resolusi tinggi.</td>
+                </tr>
+                <tr>
+                    <td><strong>Keterbatasan Info Lapangan</strong></td>
+                    <td>Penyewa tidak mengetahui spesifikasi lantai (vinyl, sintetis, interlock) dan fasilitas sebelum datang.</td>
+                    <td><strong>Interactive Catalog & Showcase</strong>: Detail spesifikasi lantai, sertifikasi FIFA, dan 8 fasilitas arena tersaji transparan.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rekap Pendapatan Rumit</strong></td>
+                    <td>Penyusunan laporan bulanan memakan waktu berhari-hari; risiko salah hitung kas tinggi.</td>
+                    <td><strong>One-Click Reporting & Print</strong>: Filter periode fleksibel dan format cetak resmi siap audit fisik.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ==================== SECTION 2: BAHASA & STACK TEKNOLOGI ==================== -->
+    <div class="section page-break">
+        <h2>2. Daftar Bahasa & Ekosistem Teknologi yang Digunakan</h2>
+        <p>
+            Aplikasi FutsalHub dibangun menggunakan kombinasi bahasa pemrograman modern dan framework standar industri untuk menjamin keandalan, performa tinggi, dan skalabilitas jangka panjang:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Komponen</th>
+                    <th style="width: 25%;">Bahasa / Teknologi</th>
+                    <th style="width: 55%;">Peran & Implementasi di FutsalHub</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Backend Core</strong></td>
+                    <td><strong>PHP 8.5.12</strong> (Framework <strong>Laravel 13.40.0</strong>)</td>
+                    <td>Menangani seluruh <em>business logic</em>, routing, controller MVC, middleware proteksi otorisasi, relasi database Eloquent ORM, dan pengolahan data reservasi.</td>
+                </tr>
+                <tr>
+                    <td><strong>Templating Engine</strong></td>
+                    <td><strong>Blade Templating</strong></td>
+                    <td>Menyusun tata letak (layouts), komponen modular (modal, navbar, sidebar, cards), pewarisan view (<code>@extends</code>, <code>@section</code>), dan render server-side yang cepat.</td>
+                </tr>
+                <tr>
+                    <td><strong>Markup Web</strong></td>
+                    <td><strong>HTML5</strong></td>
+                    <td>Fondasi struktur dokumen web semantik untuk tampilan ramah peramban (browser) dan aksesibilitas.</td>
+                </tr>
+                <tr>
+                    <td><strong>Styling / UI</strong></td>
+                    <td><strong>CSS3 & Tailwind CSS v4</strong></td>
+                    <td>Sistem desain responsif dengan utility-first classes, palet warna gelap (Deep Slate & Emerald Glow), backdrop blur, serta layout CSS Grid dan Flexbox.</td>
+                </tr>
+                <tr>
+                    <td><strong>Client-side Scripting</strong></td>
+                    <td><strong>JavaScript (ES6+ Vanilla)</strong></td>
+                    <td>Interaktivitas dinamis: AJAX fetch pengecekan slot jam real-time, Dynamic Island notification banner, modal dialogs, kalkulasi total harga, dan trigger cetak faktur.</td>
+                </tr>
+                <tr>
+                    <td><strong>Database RDBMS</strong></td>
+                    <td><strong>SQL (MySQL / MariaDB)</strong></td>
+                    <td>Penyimpanan data relasional terstruktur (pengguna, lapangan, slot waktu, booking, dan pembayaran) dengan dukungan transaksi ACID.</td>
+                </tr>
+                <tr>
+                    <td><strong>Build Tool & Asset</strong></td>
+                    <td><strong>Vite 8 & PostCSS</strong></td>
+                    <td>Bundler aset modern berkecapatan tinggi untuk kompilasi CSS Tailwind dan integrasi hot module replacement (HMR).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3. Alasan Pemilihan Stack Teknologi (Technical Rationale)</h2>
+        <p>
+            Keputusan arsitektur teknologi didasarkan pada pertimbangan keandalan transaksi, keamanan data, efisiensi resource, dan kemudahan pemeliharaan:
+        </p>
+
+        <div class="cards-grid">
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-green">Backend</span> Kenapa Laravel 13 & PHP 8.5?
+                </div>
+                <div class="feature-card-body">
+                    <strong>1. Kecepatan Pengembangan & Fitur Terkini:</strong> Laravel 13 berjalan di atas PHP 8.5.12 dengan optimasi performa kompilasi JIT, efisiensi memori, ekosistem middleware otorisasi berbasis peran (Role-Based Access Control), dan validasi request yang ketat.<br>
+                    <strong>2. Keamanan Tingkat Lanjut:</strong> Perlindungan otomatis terhadap ancaman web terpopuler (CSRF Token, XSS Sanitization, SQL Injection via PDO Prepared Statements, serta Bcrypt Password Hashing).<br>
+                    <strong>3. Eloquent ORM:</strong> Mempermudah manajemen relasi antar tabel (User, Booking, Field, Payment) secara elegan dengan transaksi aman (<code>DB::transaction</code>).
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-blue">UI Styling</span> Kenapa Tailwind CSS v4?
+                </div>
+                <div class="feature-card-body">
+                    <strong>1. Utility-First & Kebebasan Desain:</strong> Menghilangkan kebutuhan menulis ribuan baris CSS manual dan mencegah bentrok nama class (CSS specificity).<br>
+                    <strong>2. Ukuran Bundle Sangat Ringan:</strong> Tailwind v4 menggunakan engine kompilasi berbasis Rust/Lightning CSS yang mengekstrak hanya class yang dipakai (zero runtime overhead).<br>
+                    <strong>3. Konsistensi Tema Olahraga:</strong> Memungkinkan perpaduan palet warna dark luxury (Slate 950) dan hijau olahraga (Emerald 400/500) yang memikat dan modern.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-purple">Frontend</span> Kenapa Blade + Vanilla JS?
+                </div>
+                <div class="feature-card-body">
+                    <strong>1. Performa Server-Side Rendering (SSR):</strong> Halaman langsung dikirim utuh dari server ke browser tanpa menunggu loading berat bundle JavaScript (seperti React/Vue).<br>
+                    <strong>2. Efisiensi Resource:</strong> Vanilla JS tanpa library eksternal menjaga ukuran halaman di bawah 50KB untuk JavaScript, menghasilkan waktu buka (First Contentful Paint) sangat instan.<br>
+                    <strong>3. Kemudahan Maintenance:</strong> Tidak memerlukan pengaturan API decoupled yang kompleks; logika antarmuka tetap menyatu dengan template Blade.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-amber">Database</span> Kenapa MySQL Relasional?
+                </div>
+                <div class="feature-card-body">
+                    <strong>1. Integritas ACID:</strong> Reservasi lapangan menuntut konsistensi absolut di mana pembayaran dan penguncian slot tidak boleh mengalami <em>race condition</em>.<br>
+                    <strong>2. Relasi Kompleks yang Terstruktur:</strong> Relasi satu booking dengan banyak jam sewa (1 to Many) dan satu booking ke satu bukti pembayaran (1 to 1) paling ideal dimodelkan dalam RDBMS.<br>
+                    <strong>3. Foreign Key Constraints:</strong> Mencegah inkonsistensi data ketika pengguna atau lapangan dimodifikasi melalui aturan <code>ON DELETE SET NULL</code> atau <code>CASCADE</code>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 3: SPESIFIKASI FITUR LENGKAP ==================== -->
+    <div class="section page-break">
+        <h2>4. Perincian Fitur Aplikasi (Product Functional Specifications)</h2>
+        <p>
+            Aplikasi FutsalHub terbagi menjadi dua hak akses utama: <strong>Customer Portal (Penyewa)</strong> dan <strong>Admin Arena Management (Pengelola)</strong>.
+        </p>
+
+        <h3>4.1 Modul Pengguna & Autentikasi (Authentication & User Lifecycle)</h3>
+        <ul>
+            <li><strong>Registrasi Mandiri (Customer):</strong> Pendaftaran akun baru dengan validasi email unik, nomor telepon WhatsApp, dan enkripsi kata sandi menggunakan algoritma hashing aman.</li>
+            <li><strong>Login & Session Management:</strong> Autentikasi dengan perlindungan CSRF, opsi 'Remember Me', dan redirect cerdas sesuai peran (Admin dialihkan ke Dashboard, Customer ke Beranda).</li>
+            <li><strong>Manajemen Profil Pengguna:</strong> Fitur memperbarui identitas profil (Nama lengkap, nomor telepon, alamat email), mengganti kata sandi, serta mengunggah avatar/foto profil kustom.</li>
+            <li><strong>Hapus Akun Permanen (Self-Service Deletion):</strong> Pengguna dapat menghapus akunnya sendiri melalui dialog konfirmasi bahaya ganda. Sistem mengosongkan kredensial login (<code>SET NULL</code> pada foreign key), namun <em>snapshot</em> nama dan nomor telepon tetap diarsipkan pada rekaman booking historis untuk kepentingan audit administratif arena.</li>
+        </ul>
+
+        <h3>4.2 Modul Customer (Antarmuka Penyewa Lapangan)</h3>
+        <div class="cards-grid">
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-green">Beranda</span> Home & Showcase Arena
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Hero Banner Dinamis:</strong> Visual modern dengan logo FutsalHub, teks pengantar, tombol CTA, dan ilustrasi lapangan futsal transparan tanpa kanvas.<br>
+                    • <strong>Edukasi Karakteristik Lantai:</strong> Menjelaskan secara rinci keunggulan 3 tipe lantai (Vinyl Standar FIFA, Rumput Sintetis Monofilamen, dan Interlock Polimer).<br>
+                    • <strong>8 Fasilitas Unggulan Arena:</strong> Ruang Ganti & Loker, Shower Air Hangat, Parkir Luas & Aman, Kafetaria & Minuman, Bola & Rompi Gratis, Free WiFi Cepat, Lampu LED Stadium, dan Scoreboard Digital.<br>
+                    • <strong>Preview Lapangan & Detail Modal:</strong> Popup interaktif berisi spesifikasi lengkap, dimensi lapangan, fasilitas per lapangan, dan tarif sewa.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-green">Katalog</span> Pencarian & Filter Lapangan
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Filter Tipe Permukaan:</strong> Tombol pill satu klik untuk memfilter: Semua Lapangan, Vinyl, Rumput Sintetis, dan Interlock Polimer.<br>
+                    • <strong>Pencarian Cepat (Instant Search):</strong> Kolom input pencarian nama lapangan yang langsung memfilter hasil.<br>
+                    • <strong>Status Lapangan Real-time:</strong> Indikator status ketersediaan (Tersedia atau Sedang Dalam Perawatan/Perbaikan).<br>
+                    • <strong>Direct Booking Action:</strong> Tombol 'Pesan Jam' langsung mengarahkan ke formulir kalender reservasi lapangan bersangkutan.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-blue">Reservasi</span> Booking & Real-Time Slot Engine
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Pemilihan Tanggal Fleksibel:</strong> Proteksi tanggal masa lalu (hanya dapat memilih tanggal hari ini ke depan).<br>
+                    • <strong>Pencegahan Slot Kedaluwarsa:</strong> Pada hari H, jam-jam yang sudah terlewat otomatis menjadi tidak aktif (disabled) dan berwarna abu-abu.<br>
+                    • <strong>Pencegahan Double-Booking:</strong> Slot yang telah dipesan atau sedang dalam proses verifikasi langsung terkunci secara real-time via API.<br>
+                    • <strong>Multi-Slot Selection:</strong> Penyewa dapat memilih lebih dari satu jam bertanding berturut-turut dengan kalkulasi subtotal dan total biaya otomatis.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-blue">Pembayaran</span> Checkout & Pembatalan Mandiri
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Metode Pembayaran QRIS:</strong> Menampilkan QR Code statis arena, tata cara transfer e-wallet/m-banking, dan form upload bukti transaksi (JPG/PNG).<br>
+                    • <strong>Metode Pembayaran Cash:</strong> Opsi bayar tunai langsung di kasir arena sebelum bertanding.<br>
+                    • <strong>Batalkan Pesanan Mandiri:</strong> Tombol batal di bagian bawah halaman checkout jika penyewa ingin membatalkan booking sebelum pembayaran diverifikasi.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-purple">Riwayat</span> Riwayat Pesanan & Invoice Digital
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Filter Status Pemesanan:</strong> Menyaring riwayat pesanan berdasarkan: Semua, Menunggu Pembayaran, Menunggu Verifikasi, Terkonfirmasi, Selesai, Dibatalkan, dan Ditolak.<br>
+                    • <strong>Digital Invoice & Receipt:</strong> Halaman invoice resmi berdesain elegan dengan nomor unik, barcode, rincian biaya per jam, dan instruksi penukaran di meja resepsionis.<br>
+                    • <strong>Status Badge Dinamis:</strong> Warna badge responsif (Kuning: Menunggu Verifikasi, Hijau: Terkonfirmasi, Merah: Dibatalkan/Ditolak).
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-purple">UI System</span> Dynamic Island & Bell Notification
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Dynamic Island Floating Notification:</strong> Notifikasi flash status mengambang di bagian atas tengah layar bergaya iOS/Dynamic Island dengan animasi halus, ikon status, dan auto-dismiss setelah 4 detik.<br>
+                    • <strong>Notifikasi Lonceng (Header Bell):</strong> Indikator dropdown interaktif yang memuat riwayat booking yang dibatalkan oleh pengguna maupun yang ditolak oleh admin.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 4: FITUR ADMIN & ARSITEKTUR ==================== -->
+    <div class="section page-break">
+        <h3>4.3 Modul Administrator (Pengelola Arena)</h3>
+        <p>
+            Portal khusus pengelola arena untuk memonitor seluruh operasional bisnis dan keuangan:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Sub-Modul Admin</th>
+                    <th style="width: 40%;">Fungsi & Kemampuan Teknis</th>
+                    <th style="width: 35%;">Manfaat bagi Manajemen Arena</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Dashboard Utama</strong></td>
+                    <td>Statistik kartu metrik: Total Pendapatan, Total Booking Sukses, Pesanan Perlu Verifikasi, dan Lapangan Aktif beserta ringkasan transaksi terbaru.</td>
+                    <td>Memberikan visibilitas langsung terhadap performa pendapatan dan beban antrean verifikasi harian.</td>
+                </tr>
+                <tr>
+                    <td><strong>Master CRUD Lapangan</strong></td>
+                    <td>Tambah lapangan baru, edit nama, jenis lantai, tarif sewa per jam, upload foto representasi, ubah deskripsi, dan set status (Tersedia / Perbaikan).</td>
+                    <td>Fleksibilitas penuh dalam mengatur ketersediaan fisik lapangan dan pembaruan tarif sewa periodik.</td>
+                </tr>
+                <tr>
+                    <td><strong>Verifikasi Pembayaran</strong></td>
+                    <td>Daftar transaksi pending. Fitur inspeksi bukti QRIS resolusi penuh via modal popup, aksi <strong>Setujui (Approve)</strong>, dan aksi <strong>Tolak (Reject)</strong>. Opsi 'Selesaikan Cash' untuk pembayaran di kasir.</td>
+                    <td>Menjamin setiap booking yang masuk telah membayar sah dan mengontrol kas fisik arena tanpa selisih.</td>
+                </tr>
+                <tr>
+                    <td><strong>Laporan Reservasi & Cetak</strong></td>
+                    <td>Filter laporan berdasarkan rentang tanggal kalender, status pesanan, dan filter lapangan. Dilengkapi tampilan cetak khusus (<code>@media print</code>) siap cetak fisik atau export PDF.</td>
+                    <td>Mempermudah pembukuan akuntansi, evaluasi jam sibuk (peak hours), dan pelaporan ke pemilik modal arena.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>5. Arsitektur Basis Data (Database Schema & Relasi)</h2>
+        <p>
+            Struktur relasi data dirancang dengan normalisasi tingkat ketiga (3NF) guna menjamin konsistensi dan integritas referensial:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Entitas / Tabel</th>
+                    <th style="width: 35%;">Atribut Utama</th>
+                    <th style="width: 45%;">Keterangan & Relasi Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>users</code></td>
+                    <td><code>id, name, email, phone, password, role, avatar</code></td>
+                    <td>Menyimpan akun pengguna. <code>role</code>: 'admin' atau 'customer'. Relasi: 1 to Many ke <code>bookings</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>fields</code></td>
+                    <td><code>id, name, type, price_per_hour, description, image, status</code></td>
+                    <td>Master data lapangan. <code>type</code>: vinyl, sintetis, interlock. Relasi: 1 to Many ke <code>bookings</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>time_slots</code></td>
+                    <td><code>id, start_time, end_time</code></td>
+                    <td>Master jam operasional per 60 menit (08:00 - 22:00 WIB). Relasi: 1 to Many ke <code>booking_details</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>bookings</code></td>
+                    <td><code>id, booking_code, user_id, customer_name, customer_phone, field_id, booking_date, total_price, status, cancelled_by</code></td>
+                    <td>Header reservasi. <code>status</code>: pending_payment, pending_verification, confirmed, completed, cancelled, rejected.</td>
+                </tr>
+                <tr>
+                    <td><code>booking_details</code></td>
+                    <td><code>id, booking_id, slot_id, price</code></td>
+                    <td>Item rincian jam sewa per booking (mendukung pemesanan multi-slot dalam 1 transaksi).</td>
+                </tr>
+                <tr>
+                    <td><code>payments</code></td>
+                    <td><code>id, booking_id, payment_method, proof_image, paid_at, status</code></td>
+                    <td>Rekaman transaksi pembayaran. <code>payment_method</code>: qris, cash. Relasi: 1 to 1 ke <code>bookings</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>6. Persyaratan Non-Fungsional (Non-Functional Requirements)</h2>
+        <div class="cards-grid">
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-green">Keamanan</span> Security & Data Integrity
+                </div>
+                <div class="feature-card-body">
+                    • <strong>CSRF & XSS Protection:</strong> Semua formulir transaksi dilindungi token CSRF dan rendering Blade melakukan escaping karakter berbahaya secara otomatis.<br>
+                    • <strong>Password Hashing:</strong> Pengacakan sandi menggunakan enkripsi Bcrypt / Argon2.<br>
+                    • <strong>Role Middleware:</strong> Akses rute <code>/admin/*</code> divalidasi ketat oleh middleware <code>role:admin</code>.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-card-header">
+                    <span class="badge badge-blue">Performa</span> Speed & Responsiveness
+                </div>
+                <div class="feature-card-body">
+                    • <strong>Sub-Second Loading:</strong> Kompilasi view Blade dan minimalisasi aset menghasilkan kecepatan load halaman di bawah 1 detik.<br>
+                    • <strong>Mobile-First Design:</strong> Antarmuka beradaptasi sempurna pada layar smartphone, tablet, hingga monitor desktop ultra-wide.<br>
+                    • <strong>Print-Optimized:</strong> Tata letak invoice dan laporan otomatis menanggalkan elemen navbar/sidebar saat dicetak.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-blue" style="margin-top: 15px;">
+            <div class="callout-title">Rencana Pengembangan Masa Depan (Roadmap Ekstensi)</div>
+            1. Integrasi Payment Gateway Otomatis (Midtrans / Xendit Snap API) untuk verifikasi QRIS instan tanpa upload struk manual.<br>
+            2. Notifikasi WhatsApp Gateway (Fonnte API) otomatis untuk pengiriman tiket invoice langsung ke nomor penyewa.<br>
+            3. Sistem Poin Loyalitas & Turnamen Mini Bracket bagi komunitas futsal terdaftar.
+        </div>
+    </div>
+
+</body>
+</html>

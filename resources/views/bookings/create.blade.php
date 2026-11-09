@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-xs text-slate-500 mb-6">
-        <a href="{{ route('home') }}" class="hover:text-emerald-600 transition-colors">Katalog Lapangan</a>
+        <a href="{{ route('catalog') }}" class="hover:text-emerald-600 transition-colors">Katalog Lapangan</a>
         <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
         <span class="text-slate-800 font-bold">Booking {{ $field->name }}</span>
     </div>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('home') }}" class="text-xs font-bold text-slate-600 hover:text-emerald-600 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                    <a href="{{ route('catalog') }}" class="text-xs font-bold text-slate-600 hover:text-emerald-600 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
                         <i class="fa-solid fa-arrows-rotate text-[11px]"></i> Ganti Lapangan
                     </a>
                 </div>

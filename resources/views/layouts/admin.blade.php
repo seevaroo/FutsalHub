@@ -141,50 +141,54 @@
             </div>
         </header>
 
-        <!-- Flash Notifications -->
-        <div class="px-6 sm:px-8 pt-6">
-            @if(session('success'))
-                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl flex items-center justify-between shadow-xs mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <span class="text-xs font-semibold">{{ session('success') }}</span>
-                    </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800 text-sm">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            @endif
+        <!-- Dynamic Island Floating Notification Toast -->
+        @php
+            $flashType = null;
+            $flashMessage = null;
+            $flashIcon = null;
+            $flashColor = null;
 
-            @if(session('error'))
-                <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl flex items-center justify-between shadow-xs mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                        <span class="text-xs font-semibold">{{ session('error') }}</span>
-                    </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-rose-600 hover:text-rose-800 text-sm">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            @endif
+            if (session('success')) {
+                $flashType = 'success';
+                $flashMessage = session('success');
+                $flashIcon = 'fa-solid fa-check';
+                $flashColor = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30';
+            } elseif (session('error')) {
+                $flashType = 'error';
+                $flashMessage = session('error');
+                $flashIcon = 'fa-solid fa-xmark';
+                $flashColor = 'text-rose-400 bg-rose-500/20 border-rose-500/30';
+            } elseif (session('warning')) {
+                $flashType = 'warning';
+                $flashMessage = session('warning');
+                $flashIcon = 'fa-solid fa-triangle-exclamation';
+                $flashColor = 'text-amber-400 bg-amber-500/20 border-amber-500/30';
+            } elseif (session('info')) {
+                $flashType = 'info';
+                $flashMessage = session('info');
+                $flashIcon = 'fa-solid fa-circle-info';
+                $flashColor = 'text-sky-400 bg-sky-500/20 border-sky-500/30';
+            }
+        @endphp
 
-            @if(session('warning'))
-                <div class="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl flex items-center justify-between shadow-xs mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">
-                            <i class="fa-solid fa-circle-exclamation"></i>
-                        </div>
-                        <span class="text-xs font-semibold">{{ session('warning') }}</span>
+        @if($flashMessage)
+            <div id="dynamicIslandToastAdmin" 
+                class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none">
+                <div class="flex items-center gap-3 px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-full shadow-2xl shadow-slate-950/60 border border-slate-700/80 backdrop-blur-md pointer-events-auto">
+                    <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
+                        <i class="{{ $flashIcon }} text-[10px]"></i>
                     </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-amber-600 hover:text-amber-800 text-sm">
-                        <i class="fa-solid fa-xmark"></i>
+                    
+                    <span class="text-xs font-semibold text-slate-100 tracking-wide pr-1 select-none">
+                        {{ $flashMessage }}
+                    </span>
+
+                    <button type="button" onclick="dismissDynamicIslandAdmin()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1" title="Tutup">
+                        <i class="fa-solid fa-xmark text-[10px]"></i>
                     </button>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
 
         <!-- Page Content -->
         <main class="flex-1 p-6 sm:p-8">
@@ -192,6 +196,33 @@
         </main>
     </div>
 
+    <script>
+        // Dynamic Island Entrance & Auto-Dismissal
+        document.addEventListener('DOMContentLoaded', function() {
+            const toast = document.getElementById('dynamicIslandToastAdmin');
+            if (toast) {
+                setTimeout(() => {
+                    toast.classList.remove('-translate-y-16', 'opacity-0', 'scale-95');
+                    toast.classList.add('translate-y-0', 'opacity-100', 'scale-100');
+                }, 150);
+
+                setTimeout(() => {
+                    dismissDynamicIslandAdmin();
+                }, 4000);
+            }
+        });
+
+        function dismissDynamicIslandAdmin() {
+            const toast = document.getElementById('dynamicIslandToastAdmin');
+            if (toast) {
+                toast.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
+                toast.classList.add('-translate-y-16', 'opacity-0', 'scale-95');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

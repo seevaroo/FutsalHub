@@ -75,7 +75,7 @@
                 <div>
                     <h1 class="text-xl font-black tracking-tight text-slate-900 uppercase">FUTSALHUB INDOOR ARENA</h1>
                     <p class="text-xs text-slate-600 font-medium">Pusat Reservasi Lapangan Futsal Standar Internasional</p>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Jl. Pemuda Olahraga No. 10 • Telp: (021) 7890-1234 • Email: info@futsalhub.com</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Jl. Pemuda Futsal Arena No. 10 (Arena Indoor Blok A) • Telp: (021) 7890-1234 • Email: info@futsalhub.com</p>
                 </div>
             </div>
             <div class="text-right shrink-0">
