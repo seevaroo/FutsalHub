@@ -139,6 +139,24 @@
         </div>
     </form>
 
+    <!-- Card Sesi & Logout (Mudah diakses di Layar HP / Mobile) -->
+    <div class="mt-6 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-right-from-bracket text-rose-500"></i> Sesi Akun & Keluar
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Keluar dari akun Anda di perangkat ini untuk menjaga keamanan.</p>
+        </div>
+
+        <form method="POST" action="{{ route('logout') }}" class="w-full sm:w-auto">
+            @csrf
+            <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition-all border border-rose-200 hover:border-rose-600 cursor-pointer shadow-xs">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Log out</span>
+            </button>
+        </form>
+    </div>
+
     @if(!$user->isAdmin())
         <!-- Modal Konfirmasi Hapus Akun -->
         <div id="deleteAccountModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">

@@ -195,17 +195,17 @@
 
         @if($flashMessage)
             <div id="dynamicIslandToastAdmin" 
-                class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none">
-                <div class="flex items-center gap-3 px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-full shadow-2xl shadow-slate-950/60 border border-slate-700/80 backdrop-blur-md pointer-events-auto">
+                class="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-1.5rem)] sm:w-auto max-w-md transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none flex justify-center">
+                <div class="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-2xl sm:rounded-full shadow-2xl shadow-slate-950/70 border border-slate-700/80 backdrop-blur-md pointer-events-auto max-w-full">
                     <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
                         <i class="{{ $flashIcon }} text-[10px]"></i>
                     </div>
                     
-                    <span class="text-xs font-semibold text-slate-100 tracking-wide pr-1 select-none">
+                    <span class="text-xs font-semibold text-slate-100 tracking-wide leading-snug line-clamp-2 sm:line-clamp-none break-words select-none flex-1 min-w-0 text-left">
                         {{ $flashMessage }}
                     </span>
 
-                    <button type="button" onclick="dismissDynamicIslandAdmin()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1" title="Tutup">
+                    <button type="button" onclick="dismissDynamicIslandAdmin()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1 shrink-0" title="Tutup">
                         <i class="fa-solid fa-xmark text-[10px]"></i>
                     </button>
                 </div>

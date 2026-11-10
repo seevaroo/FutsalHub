@@ -15,6 +15,12 @@
                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight mb-2.5">
                     Futsal<span class="text-emerald-400">Hub</span>
                 </h1>
+
+                <!-- Mobile Only Pitch Image (Tampil tepat di bawah tulisan FutsalHub khusus di layar HP) -->
+                <div class="md:hidden flex items-center justify-center my-4">
+                    <img src="{{ asset('images/image.png') }}" alt="Ilustrasi Lapangan Futsal" class="w-36 h-36 sm:w-44 sm:h-44 object-contain filter drop-shadow-2xl select-none">
+                </div>
+
                 <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5 max-w-2xl">
                     Pusat reservasi lapangan futsal modern dengan pilihan lantai Vinyl standar FIFA, Rumput Sintetis lembut, dan Interlock polimer. Nikmati fasilitas arena lengkap dan kemudahan pemesanan online secara real-time!
                 </p>
@@ -32,9 +38,9 @@
                 </div>
             </div>
 
-        
-            <div class="shrink-0 flex items-center justify-center md:mr-8 lg:mr-14">
-                <img src="{{ asset('images/image.png') }}" alt="Ilustrasi Lapangan Futsal" class="w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain filter drop-shadow-2xl select-none">
+            <!-- Desktop Only Pitch Image (Tampil di sebelah kanan teks pada layar Desktop) -->
+            <div class="hidden md:flex shrink-0 items-center justify-center md:mr-8 lg:mr-14">
+                <img src="{{ asset('images/image.png') }}" alt="Ilustrasi Lapangan Futsal" class="md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain filter drop-shadow-2xl select-none">
             </div>
         </div>
     </div>
