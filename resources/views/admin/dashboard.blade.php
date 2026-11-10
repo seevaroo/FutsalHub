@@ -54,9 +54,11 @@
             <div>
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Total Fasilitas</span>
                 <span class="text-xl sm:text-2xl font-black text-slate-900 mt-1 block">{{ $totalFields }} Lapangan</span>
-                <span class="text-[11px] text-slate-500 font-medium mt-1 inline-block">
-                    {{ $totalCustomers }} Member customer terdaftar
-                </span>
+                <a href="{{ route('admin.customers.index') }}" class="text-[11px] text-purple-700 font-bold hover:underline mt-1 inline-flex items-center gap-1 group">
+                    <i class="fa-solid fa-users text-[10px] group-hover:scale-110 transition-transform"></i>
+                    <span>{{ $totalCustomers }} Member customer terdaftar</span>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                </a>
             </div>
             <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0">
                 <i class="fa-solid fa-futbol"></i>
@@ -126,7 +128,14 @@
                                 </td>
                                 <td class="px-5 py-3.5 whitespace-nowrap">
                                     <span class="font-bold text-slate-900 block">{{ $booking->customer_name }}</span>
-                                    <span class="text-[10px] text-slate-400">{{ $booking->customer_phone }}</span>
+                                    @if($booking->whatsapp_url)
+                                        <a href="{{ $booking->whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[10px] text-emerald-700 hover:text-emerald-800 font-semibold hover:underline" title="Chat via WhatsApp">
+                                            <i class="fa-brands fa-whatsapp text-[10px] text-emerald-600"></i>
+                                            <span>{{ $booking->customer_phone }}</span>
+                                        </a>
+                                    @else
+                                        <span class="text-[10px] text-slate-400">{{ $booking->customer_phone }}</span>
+                                    @endif
                                 </td>
                                 <td class="px-5 py-3.5 whitespace-nowrap">
                                     {{ $booking->field->name }}

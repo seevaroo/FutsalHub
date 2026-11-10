@@ -97,6 +97,27 @@ class Booking extends Model
     }
 
     /**
+     * WhatsApp chat URL for the booking's customer.
+     */
+    public function getWhatsappUrlAttribute(): ?string
+    {
+        $phone = $this->customer_phone;
+        if (!$phone || $phone === '-') {
+            return null;
+        }
+
+        $digits = preg_replace('/[^0-9]/', '', $phone);
+        if (str_starts_with($digits, '0')) {
+            $digits = '62' . substr($digits, 1);
+        } elseif (str_starts_with($digits, '8')) {
+            $digits = '62' . $digits;
+        }
+
+        $text = "Halo kak {$this->customer_name}, kami dari Admin FutsalHub Arena terkait pesanan booking #{$this->booking_code}.";
+        return "https://wa.me/{$digits}?text=" . rawurlencode($text);
+    }
+
+    /**
      * Status label and badge color classes.
      */
     public function getStatusMetaAttribute(): array

@@ -50,7 +50,56 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex antialiased">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex antialiased relative">
+
+    <!-- Dynamic Island Floating Notification Toast -->
+    @php
+        $flashType = null;
+        $flashMessage = null;
+        $flashIcon = null;
+        $flashColor = null;
+
+        if (session('success')) {
+            $flashType = 'success';
+            $flashMessage = session('success');
+            $flashIcon = 'fa-solid fa-check';
+            $flashColor = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30';
+        } elseif (session('error')) {
+            $flashType = 'error';
+            $flashMessage = session('error');
+            $flashIcon = 'fa-solid fa-xmark';
+            $flashColor = 'text-rose-400 bg-rose-500/20 border-rose-500/30';
+        } elseif (session('warning')) {
+            $flashType = 'warning';
+            $flashMessage = session('warning');
+            $flashIcon = 'fa-solid fa-triangle-exclamation';
+            $flashColor = 'text-amber-400 bg-amber-500/20 border-amber-500/30';
+        } elseif (session('info')) {
+            $flashType = 'info';
+            $flashMessage = session('info');
+            $flashIcon = 'fa-solid fa-circle-info';
+            $flashColor = 'text-sky-400 bg-sky-500/20 border-sky-500/30';
+        }
+    @endphp
+
+    @if($flashMessage)
+        <div id="dynamicIslandToast" 
+            class="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[9999] w-[calc(100%-1.5rem)] sm:w-auto max-w-md transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none flex justify-center">
+            <div class="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-2xl sm:rounded-full shadow-2xl shadow-slate-950/70 border border-slate-700/80 backdrop-blur-md pointer-events-auto max-w-full">
+                <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="{{ $flashIcon }} text-[10px]"></i>
+                </div>
+                
+                <span class="text-xs font-semibold text-slate-100 tracking-wide leading-snug line-clamp-2 sm:line-clamp-none break-words select-none flex-1 min-w-0 text-left">
+                    {{ $flashMessage }}
+                </span>
+
+                <button type="button" onclick="dismissDynamicIsland()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1 shrink-0" title="Tutup">
+                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    @endif
 
     <!-- Customer Sidebar Navigation -->
     <aside class="hidden md:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0 min-h-screen border-r border-slate-800 sticky top-0 h-screen print:hidden">
@@ -293,55 +342,6 @@
             </div>
         </header>
 
-        <!-- Dynamic Island Floating Notification Toast -->
-        @php
-            $flashType = null;
-            $flashMessage = null;
-            $flashIcon = null;
-            $flashColor = null;
-
-            if (session('success')) {
-                $flashType = 'success';
-                $flashMessage = session('success');
-                $flashIcon = 'fa-solid fa-check';
-                $flashColor = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30';
-            } elseif (session('error')) {
-                $flashType = 'error';
-                $flashMessage = session('error');
-                $flashIcon = 'fa-solid fa-xmark';
-                $flashColor = 'text-rose-400 bg-rose-500/20 border-rose-500/30';
-            } elseif (session('warning')) {
-                $flashType = 'warning';
-                $flashMessage = session('warning');
-                $flashIcon = 'fa-solid fa-triangle-exclamation';
-                $flashColor = 'text-amber-400 bg-amber-500/20 border-amber-500/30';
-            } elseif (session('info')) {
-                $flashType = 'info';
-                $flashMessage = session('info');
-                $flashIcon = 'fa-solid fa-circle-info';
-                $flashColor = 'text-sky-400 bg-sky-500/20 border-sky-500/30';
-            }
-        @endphp
-
-        @if($flashMessage)
-            <div id="dynamicIslandToast" 
-                class="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-1.5rem)] sm:w-auto max-w-md transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none flex justify-center">
-                <div class="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-2xl sm:rounded-full shadow-2xl shadow-slate-950/70 border border-slate-700/80 backdrop-blur-md pointer-events-auto max-w-full">
-                    <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
-                        <i class="{{ $flashIcon }} text-[10px]"></i>
-                    </div>
-                    
-                    <span class="text-xs font-semibold text-slate-100 tracking-wide leading-snug line-clamp-2 sm:line-clamp-none break-words select-none flex-1 min-w-0 text-left">
-                        {{ $flashMessage }}
-                    </span>
-
-                    <button type="button" onclick="dismissDynamicIsland()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1 shrink-0" title="Tutup">
-                        <i class="fa-solid fa-xmark text-[10px]"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
-
         <!-- Main Content Area -->
         <main class="flex-1 pb-24 md:pb-16 print:pb-0 print:overflow-visible">
             @yield('content')
@@ -352,9 +352,9 @@
             <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <img src="{{ asset('images/logo2.png') }}" alt="Logo FutsalHub" class="w-6 h-6 object-contain">
-                    <span class="text-sm font-extrabold text-white">Futsal<span class="text-emerald-400">Hub</span> Arena</span>
+                    <span class="text-sm font-extrabold text-white">Futsal<span class="text-emerald-400">Hub</span></span>
                     <span class="text-slate-600 hidden sm:inline">•</span>
-                    <span class="text-slate-500 text-[11px] hidden sm:inline">&copy; {{ date('Y') }} Uji Kompetensi Keahlian (LSP SMK RPL)</span>
+                    <span class="text-slate-500 text-[11px] hidden sm:inline">&copy; {{ date('Y') }}</span>
                 </div>
                 <div class="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-300">
                     <span class="flex items-center gap-1.5 font-medium">
@@ -366,7 +366,7 @@
                     </a>
                     <span class="text-slate-700 hidden sm:inline">•</span>
                     <span class="flex items-center gap-1.5 font-medium">
-                        <i class="fa-solid fa-location-dot text-emerald-400"></i> Jl. Pemuda Futsal Arena No. 10 (Arena Indoor Blok A)
+                        <i class="fa-solid fa-location-dot text-emerald-400"></i> Jl. Pemuda Futsal Arena No. 10
                     </span>
                 </div>
             </div>

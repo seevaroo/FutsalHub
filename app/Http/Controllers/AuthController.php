@@ -39,18 +39,24 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
+        // Cek jika akun telah dihapus / dinonaktifkan oleh administrator
+        $trashedUser = User::onlyTrashed()->where('email', $credentials['email'])->first();
+        if ($trashedUser) {
+            return back()->with('error', 'Akun Anda telah dinonaktifkan atau dihapus oleh administrator. Silakan hubungi pengelola arena jika ini sebuah kekeliruan.')->onlyInput('email');
+        }
+
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             $user = Auth::user();
 
             if ($user->role === 'admin') {
-                return redirect()->intended(route('admin.dashboard'))
-                    ->with('success', 'Selamat datang kembali, Admin ' . $user->name . '!');
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Selamat datang di FutsalHub, ' . $user->name . '!');
             }
 
-            return redirect()->intended(route('home'))
-                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            return redirect()->route('home')
+                ->with('success', 'Selamat datang di FutsalHub, ' . $user->name . '!');
         }
 
         return back()->withErrors([
@@ -92,19 +98,28 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
+        // Normalisasi nomor WhatsApp ke format internasional (+62...)
+        $phoneInput = preg_replace('/[^0-9]/', '', $validated['phone']);
+        if (str_starts_with($phoneInput, '0')) {
+            $phoneFormatted = '+62' . substr($phoneInput, 1);
+        } elseif (str_starts_with($phoneInput, '8')) {
+            $phoneFormatted = '+62' . $phoneInput;
+        } elseif (str_starts_with($phoneInput, '62')) {
+            $phoneFormatted = '+' . $phoneInput;
+        } else {
+            $phoneFormatted = '+62' . $phoneInput;
+        }
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'phone' => $validated['phone'],
+            'phone' => $phoneFormatted,
             'password' => Hash::make($validated['password']),
             'role' => 'customer',
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route('home')
-            ->with('success', 'Pendaftaran akun berhasil! Selamat datang di FutsalHub, ' . $user->name . '.');
+        return redirect()->route('login')
+            ->with('success', 'Akun berhasil dibuat! Silakan masuk dengan email dan password Anda.');
     }
 
     /**

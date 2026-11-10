@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FieldController as AdminFieldController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
@@ -84,6 +85,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/payments/{booking}/approve', [AdminPaymentVerificationController::class, 'approve'])->name('payments.approve');
     Route::post('/payments/{booking}/reject', [AdminPaymentVerificationController::class, 'reject'])->name('payments.reject');
     Route::post('/payments/{booking}/cash-completed', [AdminPaymentVerificationController::class, 'markCashCompleted'])->name('payments.cash_completed');
+
+    // Customer Management
+    Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+    Route::delete('/customers/{customer}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
+    Route::post('/customers/{id}/restore', [AdminCustomerController::class, 'restore'])->name('customers.restore');
 
     // Rental Reports
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');

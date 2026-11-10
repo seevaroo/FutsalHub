@@ -44,9 +44,21 @@ class ProfileController extends Controller
             'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
         ]);
 
+        // Normalisasi nomor WhatsApp ke format internasional (+62...)
+        $phoneInput = preg_replace('/[^0-9]/', '', $request->input('phone'));
+        if (str_starts_with($phoneInput, '0')) {
+            $phoneFormatted = '+62' . substr($phoneInput, 1);
+        } elseif (str_starts_with($phoneInput, '8')) {
+            $phoneFormatted = '+62' . $phoneInput;
+        } elseif (str_starts_with($phoneInput, '62')) {
+            $phoneFormatted = '+' . $phoneInput;
+        } else {
+            $phoneFormatted = '+62' . $phoneInput;
+        }
+
         $updateData = [
             'name' => $request->input('name'),
-            'phone' => $request->input('phone'),
+            'phone' => $phoneFormatted,
         ];
 
         // Handle Avatar Upload

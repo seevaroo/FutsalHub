@@ -48,7 +48,56 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased relative">
+
+    <!-- Dynamic Island Floating Notification Toast -->
+    @php
+        $flashType = null;
+        $flashMessage = null;
+        $flashIcon = null;
+        $flashColor = null;
+
+        if (session('success')) {
+            $flashType = 'success';
+            $flashMessage = session('success');
+            $flashIcon = 'fa-solid fa-check';
+            $flashColor = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30';
+        } elseif (session('error')) {
+            $flashType = 'error';
+            $flashMessage = session('error');
+            $flashIcon = 'fa-solid fa-xmark';
+            $flashColor = 'text-rose-400 bg-rose-500/20 border-rose-500/30';
+        } elseif (session('warning')) {
+            $flashType = 'warning';
+            $flashMessage = session('warning');
+            $flashIcon = 'fa-solid fa-triangle-exclamation';
+            $flashColor = 'text-amber-400 bg-amber-500/20 border-amber-500/30';
+        } elseif (session('info')) {
+            $flashType = 'info';
+            $flashMessage = session('info');
+            $flashIcon = 'fa-solid fa-circle-info';
+            $flashColor = 'text-sky-400 bg-sky-500/20 border-sky-500/30';
+        }
+    @endphp
+
+    @if($flashMessage)
+        <div id="dynamicIslandToastAdmin" 
+            class="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[9999] w-[calc(100%-1.5rem)] sm:w-auto max-w-md transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none flex justify-center">
+            <div class="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-2xl sm:rounded-full shadow-2xl shadow-slate-950/70 border border-slate-700/80 backdrop-blur-md pointer-events-auto max-w-full">
+                <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="{{ $flashIcon }} text-[10px]"></i>
+                </div>
+                
+                <span class="text-xs font-semibold text-slate-100 tracking-wide leading-snug line-clamp-2 sm:line-clamp-none break-words select-none flex-1 min-w-0 text-left">
+                    {{ $flashMessage }}
+                </span>
+
+                <button type="button" onclick="dismissDynamicIslandAdmin()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1 shrink-0" title="Tutup">
+                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    @endif
 
     <!-- Mobile Backdrop Overlay -->
     <div id="adminSidebarBackdrop" onclick="toggleAdminMobileSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
@@ -87,6 +136,11 @@
             <a href="{{ route('admin.payments.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.payments.*') ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-money-check-dollar w-5 text-center {{ request()->routeIs('admin.payments.*') ? 'text-white' : 'text-emerald-400' }}"></i>
                 <span>Verifikasi Transaksi</span>
+            </a>
+
+            <a href="{{ route('admin.customers.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.customers.*') ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                <i class="fa-solid fa-users w-5 text-center {{ request()->routeIs('admin.customers.*') ? 'text-white' : 'text-emerald-400' }}"></i>
+                <span>Data Customer</span>
             </a>
 
             <a href="{{ route('admin.reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors {{ request()->routeIs('admin.reports.*') ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -162,55 +216,6 @@
                 </a>
             </div>
         </header>
-
-        <!-- Dynamic Island Floating Notification Toast -->
-        @php
-            $flashType = null;
-            $flashMessage = null;
-            $flashIcon = null;
-            $flashColor = null;
-
-            if (session('success')) {
-                $flashType = 'success';
-                $flashMessage = session('success');
-                $flashIcon = 'fa-solid fa-check';
-                $flashColor = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30';
-            } elseif (session('error')) {
-                $flashType = 'error';
-                $flashMessage = session('error');
-                $flashIcon = 'fa-solid fa-xmark';
-                $flashColor = 'text-rose-400 bg-rose-500/20 border-rose-500/30';
-            } elseif (session('warning')) {
-                $flashType = 'warning';
-                $flashMessage = session('warning');
-                $flashIcon = 'fa-solid fa-triangle-exclamation';
-                $flashColor = 'text-amber-400 bg-amber-500/20 border-amber-500/30';
-            } elseif (session('info')) {
-                $flashType = 'info';
-                $flashMessage = session('info');
-                $flashIcon = 'fa-solid fa-circle-info';
-                $flashColor = 'text-sky-400 bg-sky-500/20 border-sky-500/30';
-            }
-        @endphp
-
-        @if($flashMessage)
-            <div id="dynamicIslandToastAdmin" 
-                class="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-1.5rem)] sm:w-auto max-w-md transition-all duration-500 ease-out transform -translate-y-16 opacity-0 scale-95 pointer-events-none flex justify-center">
-                <div class="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-slate-950/95 hover:bg-slate-950 text-white rounded-2xl sm:rounded-full shadow-2xl shadow-slate-950/70 border border-slate-700/80 backdrop-blur-md pointer-events-auto max-w-full">
-                    <div class="w-6 h-6 rounded-full {{ $flashColor }} border flex items-center justify-center text-xs shrink-0 shadow-xs">
-                        <i class="{{ $flashIcon }} text-[10px]"></i>
-                    </div>
-                    
-                    <span class="text-xs font-semibold text-slate-100 tracking-wide leading-snug line-clamp-2 sm:line-clamp-none break-words select-none flex-1 min-w-0 text-left">
-                        {{ $flashMessage }}
-                    </span>
-
-                    <button type="button" onclick="dismissDynamicIslandAdmin()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-full text-xs cursor-pointer ml-1 shrink-0" title="Tutup">
-                        <i class="fa-solid fa-xmark text-[10px]"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
 
         <!-- Page Content -->
         <main class="flex-1 p-6 sm:p-8">

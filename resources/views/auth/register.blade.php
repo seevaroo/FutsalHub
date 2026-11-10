@@ -49,14 +49,18 @@
 
         <div>
             <label for="phone" class="block text-xs font-bold text-slate-700 mb-1">Nomor WhatsApp / HP</label>
-            <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+            <div class="relative flex items-center">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-emerald-600">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                 </span>
+                <span class="absolute inset-y-0 left-9 flex items-center text-xs font-bold text-slate-600 pointer-events-none border-r border-slate-200 pr-2 my-2 select-none">
+                    +62
+                </span>
                 <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required
-                    class="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border @error('phone') border-rose-300 bg-rose-50/30 @else border-slate-200 @enderror rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium text-slate-800"
-                    placeholder="Contoh: 081234567890">
+                    class="w-full pl-20 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border @error('phone') border-rose-300 bg-rose-50/30 @else border-slate-200 @enderror rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium text-slate-800"
+                    placeholder="81234567890">
             </div>
+            <span class="text-[10px] text-slate-400 mt-1 block">Otomatis berformat +62 (bisa ketik 812..., 0812..., atau +62812...)</span>
             @error('phone')
                 <p class="text-rose-600 text-xs mt-1 font-medium">{{ $message }}</p>
             @enderror

@@ -73,14 +73,14 @@
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo FutsalHub" class="w-14 h-14 object-contain shrink-0">
                 <div>
-                    <h1 class="text-xl font-black tracking-tight text-slate-900 uppercase">FUTSALHUB INDOOR ARENA</h1>
+                    <h1 class="text-xl font-black tracking-tight text-slate-900 uppercase">FUTSALHUB</h1>
                     <p class="text-xs text-slate-600 font-medium">Pusat Reservasi Lapangan Futsal Standar Internasional</p>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Jl. Pemuda Futsal Arena No. 10 (Arena Indoor Blok A) • Telp: (021) 7890-1234 • Email: info@futsalhub.com</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Jl. Pemuda Futsal Arena No. 10 • Telp: (021) 7890-1234 • Email: info@futsalhub.com</p>
                 </div>
             </div>
             <div class="text-right shrink-0">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Sistem Informasi Reservasi</span>
-                <span class="text-xs font-black text-slate-900">FutsalHub Arena</span>
+                <span class="text-xs font-black text-slate-900">FutsalHub</span>
             </div>
         </div>
 

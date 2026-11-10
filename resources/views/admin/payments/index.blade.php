@@ -78,7 +78,14 @@
                                 <!-- Customer -->
                                 <td class="px-4 py-4">
                                     <span class="font-bold text-slate-900 block">{{ $booking->customer_name }}</span>
-                                    <span class="text-[10px] text-slate-500">{{ $booking->customer_phone }}</span>
+                                    @if($booking->whatsapp_url)
+                                        <a href="{{ $booking->whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[10px] text-emerald-700 hover:text-emerald-800 font-semibold hover:underline mt-0.5" title="Chat via WhatsApp">
+                                            <i class="fa-brands fa-whatsapp text-[11px] text-emerald-600"></i>
+                                            <span>{{ $booking->customer_phone }}</span>
+                                        </a>
+                                    @else
+                                        <span class="text-[10px] text-slate-500">{{ $booking->customer_phone }}</span>
+                                    @endif
                                 </td>
 
                                 <!-- Field & Schedule -->
