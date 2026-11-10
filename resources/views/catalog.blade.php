@@ -90,9 +90,18 @@
             </a>
         </div>
     @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Mobile Swipe Indicator Hint -->
+        <div class="flex items-center justify-between text-xs text-slate-500 md:hidden mb-3">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                <i class="fa-solid fa-hand-pointer text-[10px] animate-pulse"></i> Geser untuk melihat lapangan lainnya &rarr;
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold">{{ $fields->count() }} Lapangan</span>
+        </div>
+
+        <!-- Field Cards Container (Mobile Horizontal Swipe Carousel & Desktop Grid) -->
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-1 px-1 no-scrollbar md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:pb-0 md:pt-0 md:px-0 md:overflow-visible">
             @foreach($fields as $field)
-                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col group">
+                <div class="snap-center shrink-0 w-[84vw] sm:w-[320px] md:w-auto bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col group">
                     <!-- Image Area -->
                     <div class="relative h-56 bg-slate-900 overflow-hidden">
                         <img src="{{ $field->image ? asset('storage/' . $field->image) : asset('images/katalog.png') }}" 
