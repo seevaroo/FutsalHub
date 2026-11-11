@@ -1,28 +1,28 @@
-flowchart TD
+flowchart LR
     %% ==========================================
     %% BAGIAN 1: AKSES AWAL & AUTENTIKASI PENGGUNA
     %% ==========================================
-    Start(["Mulai / Buka Web FutsalHub"]) --> DecisionPunyaAkun{"Sudah Punya\nAkun?"}
+    Start(["Mulai / Buka Web FutsalHub"]) --> DecisionPunyaAkun{"Sudah Punya<br/>Akun?"}
 
     %% Jalur Pengguna Baru (Belum Punya Akun)
-    DecisionPunyaAkun -- "Belum (Pengguna Baru)" --> PageRegister["Form Registrasi Akun (/register)<br/>Input Nama, Email, Sandi & No HP (+62)"]
-    PageRegister --> SubmitRegister["Klik Tombol 'Daftar Akun'"]
-    SubmitRegister --> RedirectLogin["Auto-Redirect ke Halaman Login (/login)<br/>Toast: 'Akun berhasil dibuat! Silakan masuk...'"]
+    DecisionPunyaAkun -- "Belum (Baru)" --> PageRegister["Form Registrasi (/register)<br/>Input Nama, Email, Sandi & No WA (+62)"]
+    PageRegister --> SubmitRegister["Klik 'Daftar Akun'"]
+    SubmitRegister --> RedirectLogin["Auto-Redirect ke Login (/login)<br/>Toast: 'Akun berhasil dibuat!'"]
     RedirectLogin --> InputLoginBaru["Input Email & Password"]
 
     %% Jalur Pengguna Lama (Sudah Punya Akun)
-    DecisionPunyaAkun -- "Sudah (Pengguna Lama)" --> PageLoginDirect["Buka Halaman Login (/login)"]
+    DecisionPunyaAkun -- "Sudah (Lama)" --> PageLoginDirect["Buka Halaman Login (/login)"]
     PageLoginDirect --> InputLoginLama["Input Email & Password"]
 
     %% Proses Autentikasi
-    InputLoginBaru --> SubmitAuth["Klik Tombol 'Masuk' (Autentikasi)"]
+    InputLoginBaru --> SubmitAuth["Klik Tombol 'Masuk'"]
     InputLoginLama --> SubmitAuth
 
     %% Validasi Status Akun & Kredensial
     SubmitAuth --> CheckStatus{"Status Akun &<br/>Kredensial?"}
 
-    CheckStatus -- "Dihapus User" --> BlockUser["Akses Ditolak (Dynamic Island):<br/>'Akun Anda telah dihapus oleh pengguna<br/>dan tidak dapat dipulihkan.'"]
-    CheckStatus -- "Dihapus Admin" --> BlockAdmin["Akses Ditolak (Dynamic Island):<br/>'Akun Anda telah dinonaktifkan<br/>atau dihapus oleh administrator.'"]
+    CheckStatus -- "Dihapus User" --> BlockUser["Akses Ditolak:<br/>'Dihapus pengguna &<br/>tidak dapat dipulihkan'"]
+    CheckStatus -- "Dihapus Admin" --> BlockAdmin["Akses Ditolak:<br/>'Dinonaktifkan oleh<br/>administrator'"]
 
     %% Akun Aktif & Valid
     CheckStatus -- "Aktif & Valid" --> CheckRole{"Peran Akun<br/>(Role)?"}
@@ -30,56 +30,64 @@ flowchart TD
     %% ==========================================
     %% BAGIAN 2: CABANG ROLE (ADMIN VS CUSTOMER)
     %% ==========================================
-    CheckRole -- "Role: Admin" --> AdminDashboard["Admin Dashboard (/admin/dashboard)<br/>• Kelola Lapangan & Tarif Sewa<br/>• Manajemen Customer & Chat WA (+62)<br/>• Verifikasi Pembayaran (QRIS & Cash)"]
+    CheckRole -- "Admin" --> AdminDashboard["Admin Dashboard (/admin/dashboard)<br/>• Kelola Lapangan & Tarif<br/>• Manajemen Customer WA (+62)<br/>• Verifikasi QRIS & Cash"]
 
-    CheckRole -- "Role: Customer" --> CheckNewUser{"Status Registrasi<br/>Pengguna?"}
+    CheckRole -- "Customer" --> CheckNewUser{"Status Registrasi?"}
 
-    CheckNewUser -- "Akun Baru (First Login)" --> HomeNew["Beranda Customer (/)<br/>Toast: 'Selamat datang di FutsalHub, [Username]!'"]
-    CheckNewUser -- "Pengguna Lama" --> HomeOld["Beranda Customer (/)<br/>Toast: 'Selamat datang kembali di FutsalHub, [Username]!'"]
+    CheckNewUser -- "Akun Baru" --> HomeNew["Beranda Customer (/)<br/>Toast: 'Selamat datang di FutsalHub!'"]
+    CheckNewUser -- "Akun Lama" --> HomeOld["Beranda Customer (/)<br/>Toast: 'Selamat datang kembali!'"]
 
     %% ==========================================
     %% BAGIAN 3: ALUR PEMESANAN LAPANGAN (CUSTOMER)
     %% ==========================================
-    HomeNew --> BrowseFields["Pilih / Buka Katalog Lapangan (/fields)<br/>• Filter: Vinyl / Sintetis / Interlock<br/>• Cek Fasilitas & Spesifikasi Lantai"]
+    HomeNew --> BrowseFields["Pilih / Katalog Lapangan (/fields)<br/>• Filter: Vinyl / Sintetis / Interlock"]
     HomeOld --> BrowseFields
 
-    BrowseFields --> SelectSlot["Pilih Tanggal & Jam Main (Slot Engine)<br/>• Proteksi Tanggal Masa Lalu<br/>• Disable Jam yang Sudah Lewat Hari Ini<br/>• Multi-Slot Booking (Real-Time Slot Locking)"]
+    BrowseFields --> SelectSlot["Pilih Tanggal & Jam Main (Slot Engine)<br/>• Cek Ketersediaan Real-Time"]
 
-    SelectSlot --> Checkout["Halaman Checkout Pesanan<br/>• Ringkasan Jam Sewa & Total Biaya<br/>• Snapshot Data Pemesan (+62)"]
+    SelectSlot --> Checkout["Halaman Checkout Pesanan<br/>• Rincian Biaya & Kontak (+62)"]
 
-    Checkout --> DecisionMethod{"Pilih Metode<br/>Pembayaran?"}
+    Checkout --> DecisionMethod{"Pilih Metode<br/>Bayar?"}
 
     %% ==========================================
     %% BAGIAN 4: PEMBAYARAN MULTI-KANAL (QRIS & CASH)
     %% ==========================================
     %% Jalur QRIS
-    DecisionMethod -- "Metode: QRIS Digital" --> PayQRIS["Scan QRIS & Transfer Bank/E-Wallet<br/>Upload File Bukti Pembayaran"]
-    PayQRIS --> PendingQRIS["Status Pesanan: PENDING<br/>Menunggu Verifikasi Admin Arena"]
+    DecisionMethod -- "QRIS Digital" --> PayQRIS["Scan QRIS & Transfer<br/>Upload Bukti Bayar"]
+    PayQRIS --> PendingQRIS["Status: PENDING<br/>Menunggu Verifikasi Bukti"]
 
     %% Jalur Cash
-    DecisionMethod -- "Metode: Cash di Kasir" --> PayCash["Pilih Bayar Tunai (Cash)<br/>Customer Datang ke Kasir Saat Jadwal Main"]
-    PayCash --> PendingCash["Status Pesanan: PENDING<br/>Menunggu Pembayaran Tunai di Kasir"]
+    DecisionMethod -- "Cash di Kasir" --> PayCash["Pilih Bayar Tunai<br/>Datang ke Kasir Saat Main"]
+    PayCash --> PendingCash["Status: PENDING<br/>Menunggu Bayar di Kasir"]
 
     %% ==========================================
-    %% BAGIAN 5: VERIFIKASI ADMIN & SELESAI
+    %% BAGIAN 5: VERIFIKASI ADMIN
     %% ==========================================
     PendingQRIS --> AdminVerification["Admin: Verifikasi Pembayaran (/admin/payments)"]
     PendingCash --> AdminVerification
-    AdminDashboard -. "Buka Panel Pembayaran" .-> AdminVerification
+    AdminDashboard -. "Buka Panel" .-> AdminVerification
 
-    AdminVerification --> DecisionAdminAction{"Tindakan Admin<br/>Kasir Arena?"}
+    AdminVerification --> DecisionAdminAction{"Tindakan<br/>Admin Kasir?"}
 
     %% Setujui / Konfirmasi Cash
-    DecisionAdminAction -- "QRIS: Setujui / Cash: Konfirmasi" --> ApproveAction["Admin Validasi Pembayaran (Lunas)"]
-    ApproveAction --> BookingConfirmed["Status: CONFIRMED (Terkonfirmasi)<br/>• Invoice Pembayaran Terbit<br/>• Kode Booking Aktif & Jadwal Resmi Terkunci"]
+    DecisionAdminAction -- "Setujui / Konfirmasi" --> ApproveAction["Admin Validasi Lunas"]
+    ApproveAction --> BookingConfirmed["Status: CONFIRMED<br/>• Invoice Resmi Terbit<br/>• Kode Booking Aktif"]
 
     %% Tolak / Batalkan Cash
-    DecisionAdminAction -- "QRIS: Tolak / Cash: Batalkan" --> RejectAction["Admin Menolak Bukti / Membatalkan Cash"]
-    RejectAction --> BookingCancelled["Status: CANCELLED (Dibatalkan)<br/>• Jam Operasional Otomatis Dilepas Kembali<br/>• Slot Terbuka untuk Disewa Pelanggan Lain"]
+    DecisionAdminAction -- "Tolak / Batalkan" --> RejectAction["Admin Tolak Bukti / Batalkan"]
+    RejectAction --> BookingCancelled["Status: CANCELLED<br/>• Jam Otomatis Dilepas<br/>• Terbuka untuk Orang Lain"]
 
     %% Batal Mandiri oleh Customer (Sebelum Diverifikasi)
-    PendingQRIS -. "Customer Batal Mandiri (Sebelum Diverifikasi)" .-> BookingCancelled
-    PendingCash -. "Customer Batal Mandiri (Sebelum Diverifikasi)" .-> BookingCancelled
+    PendingQRIS -. "Batal Mandiri" .-> BookingCancelled
+    PendingCash -. "Batal Mandiri" .-> BookingCancelled
+
+    %% ==========================================
+    %% BAGIAN 6: TITIK TERMINAL AKHIR (SELESAI)
+    %% ==========================================
+    BookingConfirmed --> End(["Selesai"])
+    BookingCancelled --> End
+    BlockUser --> End
+    BlockAdmin --> End
 
     %% ==========================================
     %% STYLING / WARNA NODE
@@ -92,7 +100,7 @@ flowchart TD
     classDef successNode fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46,font-weight:bold;
     classDef dangerNode fill:#ffe4e6,stroke:#e11d48,stroke-width:2px,color:#9f1239,font-weight:bold;
 
-    class Start startNode;
+    class Start,End startNode;
     class DecisionPunyaAkun,CheckStatus,CheckRole,CheckNewUser,DecisionMethod,DecisionAdminAction decisionNode;
     class PageRegister,SubmitRegister,RedirectLogin,InputLoginBaru,PageLoginDirect,InputLoginLama,SubmitAuth,PayQRIS,PayCash,PendingQRIS,PendingCash processNode;
     class BrowseFields,SelectSlot,Checkout customerNode;
