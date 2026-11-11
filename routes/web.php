@@ -85,6 +85,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/payments/{booking}/approve', [AdminPaymentVerificationController::class, 'approve'])->name('payments.approve');
     Route::post('/payments/{booking}/reject', [AdminPaymentVerificationController::class, 'reject'])->name('payments.reject');
     Route::post('/payments/{booking}/cash-completed', [AdminPaymentVerificationController::class, 'markCashCompleted'])->name('payments.cash_completed');
+    Route::post('/payments/{booking}/cash-reject', [AdminPaymentVerificationController::class, 'rejectCash'])->name('payments.cash_reject');
 
     // Customer Management
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');

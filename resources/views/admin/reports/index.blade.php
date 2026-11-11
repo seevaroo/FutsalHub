@@ -21,6 +21,7 @@
         </div>
 
         <form method="GET" action="{{ route('admin.reports.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+            <input type="hidden" name="filter" value="1">
             <div>
                 <label for="start_date" class="block text-[11px] font-bold text-slate-600 mb-1">Dari Tanggal:</label>
                 <input type="date" id="start_date" name="start_date" value="{{ $startDate }}"
@@ -102,9 +103,19 @@
             </div>
         </div>
 
-        @if($bookings->isEmpty())
+        @if(!$isFiltered)
+            <div class="p-16 text-center">
+                <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-amber-200/70 shadow-xs">
+                    <i class="fa-solid fa-filter text-2xl animate-pulse"></i>
+                </div>
+                <h4 class="text-sm font-extrabold text-slate-800">Menunggu Filter Diterapkan</h4>
+                <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                    Data laporan saat ini dalam status <strong>menunggu difilter</strong>. Silakan tentukan rentang tanggal atau kriteria filter di atas, lalu klik tombol <strong>Terapkan</strong> untuk menampilkan rekapitulasi data.
+                </p>
+            </div>
+        @elseif($bookings->isEmpty())
             <div class="p-12 text-center text-slate-400 text-xs">
-                Tidak ada riwayat reservasi pada periode tanggal ini.
+                Tidak ada riwayat reservasi yang sesuai dengan kriteria filter yang dipilih.
             </div>
         @else
             <div class="overflow-x-auto">
@@ -125,7 +136,7 @@
                     <tbody class="divide-y divide-slate-100 font-medium">
                         @foreach($bookings as $index => $b)
                             <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-5 py-3.5 text-slate-400 font-bold">{{ $index + 1 }}</td>
+                                <td class="px-5 py-3.5 text-slate-400 font-bold">{{ $bookings->firstItem() + $index }}</td>
                                 <td class="px-5 py-3.5 whitespace-nowrap font-mono font-bold text-slate-900">
                                     {{ $b->booking_code }}
                                 </td>
@@ -173,6 +184,41 @@
                     </tfoot>
                 </table>
             </div>
+
+            <!-- Pagination Prev - Next Navigation -->
+            @if($bookings->hasPages())
+                <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3">
+                    <span class="text-xs text-slate-500 font-medium">
+                        Menampilkan <strong class="text-slate-800">{{ $bookings->firstItem() ?? 0 }}</strong> - <strong class="text-slate-800">{{ $bookings->lastItem() ?? 0 }}</strong> dari <strong class="text-slate-800">{{ $bookings->total() }}</strong> transaksi
+                    </span>
+
+                    <div class="flex items-center gap-2">
+                        @if($bookings->onFirstPage())
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-not-allowed">
+                                <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
+                            </span>
+                        @else
+                            <a href="{{ $bookings->previousPageUrl() }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors">
+                                <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
+                            </a>
+                        @endif
+
+                        <span class="text-xs font-bold text-slate-700 px-2">
+                            Halaman {{ $bookings->currentPage() }} dari {{ $bookings->lastPage() }}
+                        </span>
+
+                        @if($bookings->hasMorePages())
+                            <a href="{{ $bookings->nextPageUrl() }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors">
+                                Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </a>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-not-allowed">
+                                Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            @endif
         @endif
     </div>
 </div>

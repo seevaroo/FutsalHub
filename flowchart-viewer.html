@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Viewer &mdash; FutsalHub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #0b1329;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 950px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            color: #0f172a;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #0f172a;
+        }
+        .btn-secondary:hover {
+            background: #1e293b;
+        }
+        .canvas-wrapper {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- CARD 1: AUTHENTICATION FLOWCHART -->
+        <div class="card">
+            <div class="header">
+                <div>
+                    <div class="title">Diagram 1: Alur Autentikasi, Registrasi & Login Pengguna</div>
+                    <div class="subtitle">Mulai &rarr; Percabangan Daftar (+62) vs Langsung Login &rarr; Status Akun &rarr; Role Dynamic Island</div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="downloadSVG('auth-svg', 'flowchart-autentikasi.svg')">Unduh SVG</button>
+                    <button class="btn btn-secondary" onclick="downloadPNG('auth-svg', 'flowchart-autentikasi.png', 1440, 740)">Unduh PNG</button>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <object data="flowchart-autentikasi.svg" type="image/svg+xml" id="auth-svg" style="width: 100%; height: auto;"></object>
+            </div>
+        </div>
+
+        <!-- CARD 2: BOOKING & MULTI-CHANNEL PAYMENT FLOWCHART -->
+        <div class="card">
+            <div class="header">
+                <div>
+                    <div class="title">Diagram 2: Alur Pemesanan Lapangan & Pembayaran Multi-Kanal (QRIS & Cash)</div>
+                    <div class="subtitle">Katalog &rarr; Multi-Slot Locking &rarr; Checkout &rarr; QRIS (Upload Bukti) vs Cash &rarr; Verifikasi Admin</div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="downloadSVG('booking-svg', 'flowchart-booking.svg')">Unduh SVG</button>
+                    <button class="btn btn-secondary" onclick="downloadPNG('booking-svg', 'flowchart-booking.png', 1440, 660)">Unduh PNG</button>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <object data="flowchart-booking.svg" type="image/svg+xml" id="booking-svg" style="width: 100%; height: auto;"></object>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function downloadSVG(objectId, filename) {
+            const obj = document.getElementById(objectId);
+            const svgDoc = obj.contentDocument;
+            const svg = svgDoc ? svgDoc.querySelector('svg') : null;
+            if (!svg) {
+                window.open(obj.getAttribute('data'), '_blank');
+                return;
+            }
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadPNG(objectId, filename, width, height) {
+            const obj = document.getElementById(objectId);
+            const svgDoc = obj.contentDocument;
+            const svg = svgDoc ? svgDoc.querySelector('svg') : null;
+            if (!svg) {
+                window.open(filename, '_blank');
+                return;
+            }
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            const svgBlob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, width, height);
+                URL.revokeObjectURL(url);
+                const pngUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = pngUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            img.src = url;
+        }
+    </script>
+</body>
+</html>

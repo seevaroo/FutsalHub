@@ -39,9 +39,12 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        // Cek jika akun telah dihapus / dinonaktifkan oleh administrator
+        // Cek jika akun telah dihapus / dinonaktifkan
         $trashedUser = User::onlyTrashed()->where('email', $credentials['email'])->first();
         if ($trashedUser) {
+            if ($trashedUser->isDeletedByUser()) {
+                return back()->with('error', 'Akun Anda telah dihapus oleh pengguna dan tidak dapat dipulihkan. Silakan daftar akun baru jika ingin melakukan reservasi.')->onlyInput('email');
+            }
             return back()->with('error', 'Akun Anda telah dinonaktifkan atau dihapus oleh administrator. Silakan hubungi pengelola arena jika ini sebuah kekeliruan.')->onlyInput('email');
         }
 
@@ -50,13 +53,21 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
+            // Cek apakah user baru mendaftar (misal baru dibuat atau flag session dari registrasi)
+            $isNewlyRegistered = session()->pull('newly_registered_email') === $user->email
+                || ($user->created_at && $user->created_at->diffInMinutes(now()) < 5 && $user->created_at->equalTo($user->updated_at));
+
+            $welcomeMessage = $isNewlyRegistered
+                ? 'Selamat datang di FutsalHub, ' . $user->name . '!'
+                : 'Selamat datang kembali di FutsalHub, ' . $user->name . '!';
+
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard')
-                    ->with('success', 'Selamat datang di FutsalHub, ' . $user->name . '!');
+                    ->with('success', $welcomeMessage);
             }
 
             return redirect()->route('home')
-                ->with('success', 'Selamat datang di FutsalHub, ' . $user->name . '!');
+                ->with('success', $welcomeMessage);
         }
 
         return back()->withErrors([
@@ -117,6 +128,9 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => 'customer',
         ]);
+
+        // Tandai email pendaftar baru di session agar saat login pertama kali muncul notif selamat datang khusus akun baru
+        session(['newly_registered_email' => $user->email]);
 
         return redirect()->route('login')
             ->with('success', 'Akun berhasil dibuat! Silakan masuk dengan email dan password Anda.');

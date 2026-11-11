@@ -118,7 +118,8 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // 4. Delete user permanently from database
+        // 4. Mark account as deleted by user and soft delete
+        $user->update(['deleted_by' => 'user']);
         $user->delete();
 
         return redirect()->route('login')

@@ -169,9 +169,15 @@
                                 <!-- Status Badge -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     @if($customer->trashed())
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Dihapus Admin
-                                        </span>
+                                        @if($customer->isDeletedByUser())
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-300">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Dihapus User
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Dihapus Admin
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
@@ -182,14 +188,21 @@
                                 <!-- Action Buttons -->
                                 <td class="px-5 py-4 whitespace-nowrap text-right">
                                     @if($customer->trashed())
-                                        <!-- Restore Button -->
-                                        <form method="POST" action="{{ route('admin.customers.restore', $customer->id) }}" class="inline-block" onsubmit="return confirm('Aktifkan kembali akun customer {{ $customer->name }}?')">
-                                            @csrf
-                                            <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer" title="Pulihkan Akun">
-                                                <i class="fa-solid fa-rotate-left text-[11px]"></i>
-                                                <span>Pulihkan</span>
-                                            </button>
-                                        </form>
+                                        @if($customer->isDeletedByUser())
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 text-xs font-semibold" title="Akun ini dihapus sendiri oleh pengguna dan tidak dapat dipulihkan">
+                                                <i class="fa-solid fa-lock text-[10px] text-slate-400"></i>
+                                                <span>Tidak dapat dipulihkan</span>
+                                            </span>
+                                        @else
+                                            <!-- Restore Button -->
+                                            <form method="POST" action="{{ route('admin.customers.restore', $customer->id) }}" class="inline-block" onsubmit="return confirm('Aktifkan kembali akun customer {{ $customer->name }}?')">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer" title="Pulihkan Akun">
+                                                    <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                                                    <span>Pulihkan</span>
+                                                </button>
+                                            </form>
+                                        @endif
                                     @else
                                         <!-- Delete Button Trigger Modal -->
                                         <button type="button" 

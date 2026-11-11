@@ -122,5 +122,24 @@ class PaymentVerificationController extends Controller
         return redirect()->back()
             ->with('success', "Pembayaran tunai #{$booking->booking_code} diterima. Status booking: Terkonfirmasi.");
     }
-}
 
+    /**
+     * Reject cash transaction and cancel booking.
+     */
+    public function rejectCash(Booking $booking)
+    {
+        if ($booking->payment) {
+            $booking->payment->update([
+                'status' => 'rejected',
+            ]);
+        }
+
+        $booking->update([
+            'status' => 'cancelled',
+            'cancelled_by' => 'admin',
+        ]);
+
+        return redirect()->back()
+            ->with('warning', "Pembayaran tunai #{$booking->booking_code} dibatalkan. Status booking diubah menjadi Dibatalkan.");
+    }
+}

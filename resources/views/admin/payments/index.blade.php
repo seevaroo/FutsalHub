@@ -172,12 +172,19 @@
                                         </form>
                                     @endif
 
-                                    <!-- Cash at Venue Mark Completed Button -->
+                                    <!-- Cash at Venue Mark Completed & Cancel Buttons -->
                                     @if($booking->payment && $booking->payment->payment_method === 'cash' && $booking->status === 'pending')
                                         <form method="POST" action="{{ route('admin.payments.cash_completed', $booking->id) }}" class="inline-block" onsubmit="return confirm('Konfirmasi bahwa customer telah membayar tunai {{ $booking->formatted_total }} di kasir?')">
                                             @csrf
                                             <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-xs transition-colors">
-                                                <i class="fa-solid fa-hand-holding-dollar text-[10px]"></i> Konfirmasi Bayar Tunai
+                                                <i class="fa-solid fa-check text-[10px]"></i> Konfirmasi
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('admin.payments.cash_reject', $booking->id) }}" class="inline-block" onsubmit="return confirm('Batalkan pesanan cash untuk booking {{ $booking->booking_code }}?')">
+                                            @csrf
+                                            <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg shadow-xs transition-colors">
+                                                <i class="fa-solid fa-xmark text-[10px]"></i> Batalkan
                                             </button>
                                         </form>
                                     @endif

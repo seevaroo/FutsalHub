@@ -1,0 +1,104 @@
+<svg viewBox="0 0 720 370" xmlns="http://www.w3.org/2000/svg" style="background:#f8fafc; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f172a" />
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+        </marker>
+        <marker id="arrow-rose" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#e11d48" />
+        </marker>
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+        </marker>
+    </defs>
+
+    <!-- Background Card -->
+    <rect width="100%" height="100%" fill="#f8fafc" rx="12"/>
+
+    <!-- Step 1: Start -->
+    <rect x="15" y="62" width="100" height="38" rx="19" fill="#10b981" stroke="#059669" stroke-width="1.5" />
+    <text x="65" y="85" fill="#ffffff" font-size="9.5" font-weight="700" text-anchor="middle">Mulai / Buka Web</text>
+
+    <!-- Line 1 -> Decision: Punya Akun? -->
+    <line x1="115" y1="81" x2="155" y2="81" stroke="#0f172a" stroke-width="1.5" marker-end="url(#arrow)" />
+
+    <!-- Decision 1: Punya Akun? -->
+    <polygon points="205,56 255,81 205,106 155,81" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+    <text x="205" y="77" fill="#92400e" font-size="8.5" font-weight="700" text-anchor="middle">Punya Akun?</text>
+    <text x="205" y="89" fill="#92400e" font-size="7.5" text-anchor="middle">(Status User)</text>
+
+    <!-- Branch 1: Belum Punya (Pengguna Baru) -> Top Path -->
+    <line x1="205" y1="56" x2="205" y2="26" stroke="#0284c7" stroke-width="1.5" />
+    <line x1="205" y1="26" x2="270" y2="26" stroke="#0284c7" stroke-width="1.5" marker-end="url(#arrow-blue)" />
+    <text x="210" y="44" fill="#0284c7" font-size="7.5" font-weight="700">Belum (Baru)</text>
+
+    <!-- Box: Form Registrasi -->
+    <rect x="275" y="7" width="135" height="38" rx="8" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5" />
+    <text x="342" y="22" fill="#0369a1" font-size="8.5" font-weight="700" text-anchor="middle">Form Daftar Akun</text>
+    <text x="342" y="35" fill="#0284c7" font-size="7.5" text-anchor="middle">Input Data + Format +62</text>
+
+    <!-- Line from Register to Login: Auto Redirect with Toast -->
+    <line x1="410" y1="26" x2="505" y2="26" stroke="#10b981" stroke-width="1.5" />
+    <line x1="505" y1="26" x2="505" y2="52" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrow-green)" />
+    <text x="458" y="19" fill="#10b981" font-size="7.5" font-weight="700" text-anchor="middle">Submit &amp; Auto-Redirect</text>
+    <text x="458" y="38" fill="#059669" font-size="7" text-anchor="middle">Toast: Akun berhasil dibuat!</text>
+
+    <!-- Branch 2: Sudah Punya (Pengguna Lama) -> Direct to Login -->
+    <line x1="255" y1="81" x2="440" y2="81" stroke="#0f172a" stroke-width="1.5" marker-end="url(#arrow)" />
+    <text x="340" y="74" fill="#0f172a" font-size="8" font-weight="700" text-anchor="middle">Sudah (Langsung Login)</text>
+
+    <!-- Step 3: Halaman Login Form -->
+    <rect x="445" y="58" width="120" height="46" rx="8" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
+    <text x="505" y="76" fill="#0f172a" font-size="9" font-weight="700" text-anchor="middle">Halaman Login</text>
+    <text x="505" y="92" fill="#64748b" font-size="7.5" text-anchor="middle">Input Email &amp; Sandi</text>
+
+    <!-- Line 3 -> Decision: Status Akun (Dihapus/Aktif) -->
+    <line x1="505" y1="104" x2="505" y2="138" stroke="#0f172a" stroke-width="1.5" marker-end="url(#arrow)" />
+    <text x="510" y="124" fill="#0f172a" font-size="7.5" font-weight="700">Klik Masuk</text>
+
+    <!-- Decision 2: Status Akun -->
+    <polygon points="505,140 565,163 505,186 445,163" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+    <text x="505" y="160" fill="#92400e" font-size="8.5" font-weight="700" text-anchor="middle">Status Akun?</text>
+    <text x="505" y="171" fill="#92400e" font-size="7.5" text-anchor="middle">Dihapus / Aktif</text>
+
+    <!-- Branch Dihapus (Right) -->
+    <line x1="565" y1="163" x2="600" y2="163" stroke="#e11d48" stroke-width="1.5" marker-end="url(#arrow-rose)" />
+    <text x="572" y="156" fill="#e11d48" font-size="7.5" font-weight="700">Dihapus</text>
+
+    <!-- Box: Tolak Akses (Trashed) -->
+    <rect x="605" y="136" width="108" height="54" rx="8" fill="#ffe4e6" stroke="#e11d48" stroke-width="1.5" />
+    <text x="659" y="151" fill="#9f1239" font-size="8" font-weight="700" text-anchor="middle">Tolak Login</text>
+    <text x="659" y="163" fill="#be123c" font-size="6.8" text-anchor="middle">• Dihapus User:</text>
+    <text x="659" y="173" fill="#be123c" font-size="6.8" text-anchor="middle">  Tak dpt dipulihkan</text>
+    <text x="659" y="183" fill="#be123c" font-size="6.8" text-anchor="middle">• Dihapus Admin</text>
+
+    <!-- Branch Aktif & Valid (Down) -->
+    <line x1="505" y1="186" x2="505" y2="220" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrow-green)" />
+    <text x="510" y="206" fill="#10b981" font-size="7.5" font-weight="700">Valid</text>
+
+    <!-- Decision 3: Role Akun -->
+    <polygon points="505,222 560,245 505,268 450,245" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+    <text x="505" y="242" fill="#075985" font-size="8.5" font-weight="700" text-anchor="middle">Role Akun?</text>
+    <text x="505" y="254" fill="#075985" font-size="7.5" text-anchor="middle">Admin / Customer</text>
+
+    <!-- Branch Admin (Left) -->
+    <line x1="450" y1="245" x2="355" y2="245" stroke="#0284c7" stroke-width="1.5" marker-end="url(#arrow-blue)" />
+    <text x="402" y="238" fill="#0284c7" font-size="8" font-weight="700">Admin</text>
+
+    <!-- Box: Admin Dashboard -->
+    <rect x="215" y="225" width="135" height="40" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+    <text x="282" y="242" fill="#ffffff" font-size="9" font-weight="700" text-anchor="middle">Admin Dashboard</text>
+    <text x="282" y="255" fill="#38bdf8" font-size="7.5" text-anchor="middle">Kelola Arena &amp; Verifikasi</text>
+
+    <!-- Branch Customer (Down) -->
+    <line x1="505" y1="268" x2="505" y2="300" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrow-green)" />
+    <text x="512" y="287" fill="#10b981" font-size="8" font-weight="700">Customer</text>
+
+    <!-- Box: Customer Home with Dynamic Island Toast -->
+    <rect x="365" y="303" width="280" height="52" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
+    <text x="505" y="320" fill="#065f46" font-size="9.5" font-weight="800" text-anchor="middle">Beranda FutsalHub (Home Customer)</text>
+    <text x="505" y="335" fill="#059669" font-size="7.5" text-anchor="middle">• Akun Baru: "Selamat datang di FutsalHub, [User]!"</text>
+    <text x="505" y="347" fill="#059669" font-size="7.5" text-anchor="middle">• Akun Lama: "Selamat datang kembali di FutsalHub, [User]!"</text>
+</svg>

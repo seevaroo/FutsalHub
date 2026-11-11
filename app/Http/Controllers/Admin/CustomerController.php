@@ -75,6 +75,7 @@ class CustomerController extends Controller
         $name = $customer->name;
         $email = $customer->email;
 
+        $customer->update(['deleted_by' => 'admin']);
         $customer->delete();
 
         return back()->with('success', "Akun customer {$name} ({$email}) berhasil dihapus dari sistem.");
@@ -86,6 +87,13 @@ class CustomerController extends Controller
     public function restore($id)
     {
         $customer = User::onlyTrashed()->where('role', 'customer')->findOrFail($id);
+
+        if ($customer->isDeletedByUser()) {
+            return back()->with('error', "Akun {$customer->name} telah dihapus sendiri oleh pengguna dan tidak dapat dipulihkan.");
+        }
+
+        $customer->deleted_by = null;
+        $customer->save();
         $customer->restore();
 
         return back()->with('success', "Akun customer {$customer->name} ({$customer->email}) berhasil dipulihkan / diaktifkan kembali.");

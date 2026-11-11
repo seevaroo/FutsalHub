@@ -1,0 +1,101 @@
+flowchart TD
+    %% ==========================================
+    %% BAGIAN 1: AKSES AWAL & AUTENTIKASI PENGGUNA
+    %% ==========================================
+    Start(["Mulai / Buka Web FutsalHub"]) --> DecisionPunyaAkun{"Sudah Punya\nAkun?"}
+
+    %% Jalur Pengguna Baru (Belum Punya Akun)
+    DecisionPunyaAkun -- "Belum (Pengguna Baru)" --> PageRegister["Form Registrasi Akun (/register)<br/>Input Nama, Email, Sandi & No HP (+62)"]
+    PageRegister --> SubmitRegister["Klik Tombol 'Daftar Akun'"]
+    SubmitRegister --> RedirectLogin["Auto-Redirect ke Halaman Login (/login)<br/>Toast: 'Akun berhasil dibuat! Silakan masuk...'"]
+    RedirectLogin --> InputLoginBaru["Input Email & Password"]
+
+    %% Jalur Pengguna Lama (Sudah Punya Akun)
+    DecisionPunyaAkun -- "Sudah (Pengguna Lama)" --> PageLoginDirect["Buka Halaman Login (/login)"]
+    PageLoginDirect --> InputLoginLama["Input Email & Password"]
+
+    %% Proses Autentikasi
+    InputLoginBaru --> SubmitAuth["Klik Tombol 'Masuk' (Autentikasi)"]
+    InputLoginLama --> SubmitAuth
+
+    %% Validasi Status Akun & Kredensial
+    SubmitAuth --> CheckStatus{"Status Akun &<br/>Kredensial?"}
+
+    CheckStatus -- "Dihapus User" --> BlockUser["Akses Ditolak (Dynamic Island):<br/>'Akun Anda telah dihapus oleh pengguna<br/>dan tidak dapat dipulihkan.'"]
+    CheckStatus -- "Dihapus Admin" --> BlockAdmin["Akses Ditolak (Dynamic Island):<br/>'Akun Anda telah dinonaktifkan<br/>atau dihapus oleh administrator.'"]
+
+    %% Akun Aktif & Valid
+    CheckStatus -- "Aktif & Valid" --> CheckRole{"Peran Akun<br/>(Role)?"}
+
+    %% ==========================================
+    %% BAGIAN 2: CABANG ROLE (ADMIN VS CUSTOMER)
+    %% ==========================================
+    CheckRole -- "Role: Admin" --> AdminDashboard["Admin Dashboard (/admin/dashboard)<br/>• Kelola Lapangan & Tarif Sewa<br/>• Manajemen Customer & Chat WA (+62)<br/>• Verifikasi Pembayaran (QRIS & Cash)"]
+
+    CheckRole -- "Role: Customer" --> CheckNewUser{"Status Registrasi<br/>Pengguna?"}
+
+    CheckNewUser -- "Akun Baru (First Login)" --> HomeNew["Beranda Customer (/)<br/>Toast: 'Selamat datang di FutsalHub, [Username]!'"]
+    CheckNewUser -- "Pengguna Lama" --> HomeOld["Beranda Customer (/)<br/>Toast: 'Selamat datang kembali di FutsalHub, [Username]!'"]
+
+    %% ==========================================
+    %% BAGIAN 3: ALUR PEMESANAN LAPANGAN (CUSTOMER)
+    %% ==========================================
+    HomeNew --> BrowseFields["Pilih / Buka Katalog Lapangan (/fields)<br/>• Filter: Vinyl / Sintetis / Interlock<br/>• Cek Fasilitas & Spesifikasi Lantai"]
+    HomeOld --> BrowseFields
+
+    BrowseFields --> SelectSlot["Pilih Tanggal & Jam Main (Slot Engine)<br/>• Proteksi Tanggal Masa Lalu<br/>• Disable Jam yang Sudah Lewat Hari Ini<br/>• Multi-Slot Booking (Real-Time Slot Locking)"]
+
+    SelectSlot --> Checkout["Halaman Checkout Pesanan<br/>• Ringkasan Jam Sewa & Total Biaya<br/>• Snapshot Data Pemesan (+62)"]
+
+    Checkout --> DecisionMethod{"Pilih Metode<br/>Pembayaran?"}
+
+    %% ==========================================
+    %% BAGIAN 4: PEMBAYARAN MULTI-KANAL (QRIS & CASH)
+    %% ==========================================
+    %% Jalur QRIS
+    DecisionMethod -- "Metode: QRIS Digital" --> PayQRIS["Scan QRIS & Transfer Bank/E-Wallet<br/>Upload File Bukti Pembayaran"]
+    PayQRIS --> PendingQRIS["Status Pesanan: PENDING<br/>Menunggu Verifikasi Admin Arena"]
+
+    %% Jalur Cash
+    DecisionMethod -- "Metode: Cash di Kasir" --> PayCash["Pilih Bayar Tunai (Cash)<br/>Customer Datang ke Kasir Saat Jadwal Main"]
+    PayCash --> PendingCash["Status Pesanan: PENDING<br/>Menunggu Pembayaran Tunai di Kasir"]
+
+    %% ==========================================
+    %% BAGIAN 5: VERIFIKASI ADMIN & SELESAI
+    %% ==========================================
+    PendingQRIS --> AdminVerification["Admin: Verifikasi Pembayaran (/admin/payments)"]
+    PendingCash --> AdminVerification
+    AdminDashboard -. "Buka Panel Pembayaran" .-> AdminVerification
+
+    AdminVerification --> DecisionAdminAction{"Tindakan Admin<br/>Kasir Arena?"}
+
+    %% Setujui / Konfirmasi Cash
+    DecisionAdminAction -- "QRIS: Setujui / Cash: Konfirmasi" --> ApproveAction["Admin Validasi Pembayaran (Lunas)"]
+    ApproveAction --> BookingConfirmed["Status: CONFIRMED (Terkonfirmasi)<br/>• Invoice Pembayaran Terbit<br/>• Kode Booking Aktif & Jadwal Resmi Terkunci"]
+
+    %% Tolak / Batalkan Cash
+    DecisionAdminAction -- "QRIS: Tolak / Cash: Batalkan" --> RejectAction["Admin Menolak Bukti / Membatalkan Cash"]
+    RejectAction --> BookingCancelled["Status: CANCELLED (Dibatalkan)<br/>• Jam Operasional Otomatis Dilepas Kembali<br/>• Slot Terbuka untuk Disewa Pelanggan Lain"]
+
+    %% Batal Mandiri oleh Customer (Sebelum Diverifikasi)
+    PendingQRIS -. "Customer Batal Mandiri (Sebelum Diverifikasi)" .-> BookingCancelled
+    PendingCash -. "Customer Batal Mandiri (Sebelum Diverifikasi)" .-> BookingCancelled
+
+    %% ==========================================
+    %% STYLING / WARNA NODE
+    %% ==========================================
+    classDef startNode fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef decisionNode fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:bold;
+    classDef processNode fill:#ffffff,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef customerNode fill:#f8fafc,stroke:#0284c7,stroke-width:1.5px,color:#0369a1;
+    classDef adminNode fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef successNode fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46,font-weight:bold;
+    classDef dangerNode fill:#ffe4e6,stroke:#e11d48,stroke-width:2px,color:#9f1239,font-weight:bold;
+
+    class Start startNode;
+    class DecisionPunyaAkun,CheckStatus,CheckRole,CheckNewUser,DecisionMethod,DecisionAdminAction decisionNode;
+    class PageRegister,SubmitRegister,RedirectLogin,InputLoginBaru,PageLoginDirect,InputLoginLama,SubmitAuth,PayQRIS,PayCash,PendingQRIS,PendingCash processNode;
+    class BrowseFields,SelectSlot,Checkout customerNode;
+    class HomeNew,HomeOld,ApproveAction,BookingConfirmed successNode;
+    class BlockUser,BlockAdmin,RejectAction,BookingCancelled dangerNode;
+    class AdminDashboard,AdminVerification adminNode;

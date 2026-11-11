@@ -32,6 +32,7 @@ class User extends Authenticatable
         'password',
         'role',
         'avatar',
+        'deleted_by',
     ];
 
     /**
@@ -72,6 +73,22 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->role === 'customer';
+    }
+
+    /**
+     * Check if user account was deleted by customer themselves.
+     */
+    public function isDeletedByUser(): bool
+    {
+        return $this->trashed() && $this->deleted_by === 'user';
+    }
+
+    /**
+     * Check if user account was deleted by admin.
+     */
+    public function isDeletedByAdmin(): bool
+    {
+        return $this->trashed() && $this->deleted_by !== 'user';
     }
 
     /**

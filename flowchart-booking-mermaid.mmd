@@ -1,0 +1,56 @@
+flowchart TD
+    %% Titik Awal
+    Start(["Mulai: Pilih Lapangan & Jadwal"]) --> Catalog["Buka Katalog Lapangan (/fields)<br/>• Filter: Vinyl / Sintetis / Interlock<br/>• Cek Detail Tarif & Spesifikasi Lantai"]
+
+    Catalog --> SelectSlot["Pilih Tanggal & Jam Main (Slot Engine)<br/>• Proteksi Tanggal Masa Lalu<br/>• Disable Jam yang Sudah Lewat Hari Ini<br/>• Multi-Slot Booking (Real-Time Conflict Locking)"]
+
+    SelectSlot --> Checkout["Halaman Checkout Pesanan<br/>• Rincian Lapangan, Daftar Jam & Total Biaya<br/>• Data Kontak Pemesan (+62 WhatsApp)"]
+
+    Checkout --> DecisionMethod{"Pilih Metode<br/>Pembayaran?"}
+
+    %% Jalur 1: Pembayaran QRIS
+    DecisionMethod -- "Metode: QRIS Digital" --> QRISFlow["Scan QR Code Arena & Transfer Bank/E-Wallet<br/>Upload Foto Bukti Transfer Pembayaran"]
+    QRISFlow --> PendingQRIS["Status Pesanan: PENDING<br/>Menunggu Verifikasi Bukti Transfer oleh Admin"]
+
+    %% Jalur 2: Pembayaran Cash di Kasir
+    DecisionMethod -- "Metode: Cash di Kasir" --> CashFlow["Konfirmasi Sewa Lapangan (Bayar Tunai)<br/>Customer Datang ke Kasir Arena Saat Jadwal Main"]
+    CashFlow --> PendingCash["Status Pesanan: PENDING<br/>Menunggu Pembayaran Tunai di Kasir Arena"]
+
+    %% Admin Verification Panel
+    PendingQRIS --> AdminPanel["Admin: Panel Verifikasi Pembayaran (/admin/payments)"]
+    PendingCash --> AdminPanel
+
+    AdminPanel --> DecisionAdmin{"Tindakan Admin<br/>Kasir Arena?"}
+
+    %% Percabangan Keputusan Admin
+    DecisionAdmin -- "QRIS: Setujui / Cash: Konfirmasi" --> ApproveAction["Admin Memvalidasi Pembayaran (Lunas)"]
+    DecisionAdmin -- "QRIS: Tolak / Cash: Batalkan" --> RejectAction["Admin Menolak Bukti / Membatalkan Cash"]
+
+    %% Hasil Akhir
+    ApproveAction --> BookingConfirmed["Status: CONFIRMED (Terkonfirmasi)<br/>• Invoice Pembayaran Resmi Terbit<br/>• Kode Booking Aktif & Lapangan Terjadwal"]
+
+    RejectAction --> BookingCancelled["Status: CANCELLED (Dibatalkan)<br/>• Jam Operasional Otomatis Dilepas Kembali<br/>• Slot Terbuka untuk Dipesan Pelanggan Lain"]
+
+    %% Customer Cancel (Sebelum Verifikasi)
+    PendingQRIS -. "Batal Mandiri Sebelum Diverifikasi" .-> BookingCancelled
+    PendingCash -. "Batal Mandiri Sebelum Diverifikasi" .-> BookingCancelled
+
+    %% Styling Node
+    classDef startNode fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef decisionNode fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:bold;
+    classDef processNode fill:#ffffff,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef qrisNode fill:#f0f9ff,stroke:#0284c7,stroke-width:1.5px,color:#0369a1;
+    classDef cashNode fill:#f0fdf4,stroke:#16a34a,stroke-width:1.5px,color:#15803d;
+    classDef adminNode fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef successNode fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46,font-weight:bold;
+    classDef dangerNode fill:#ffe4e6,stroke:#e11d48,stroke-width:2px,color:#9f1239,font-weight:bold;
+
+    class Start startNode;
+    class DecisionMethod,DecisionAdmin decisionNode;
+    class Catalog,SelectSlot,Checkout,PendingQRIS,PendingCash processNode;
+    class QRISFlow qrisNode;
+    class CashFlow cashNode;
+    class AdminPanel adminNode;
+    class ApproveAction,BookingConfirmed successNode;
+    class RejectAction,BookingCancelled dangerNode;
+
