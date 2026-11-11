@@ -1,58 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# ⚽ FutsalHub
 
-## About Laravel
+**Sistem Reservasi & Manajemen Lapangan Futsal Berbasis Web**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.5%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Platform web modern untuk otomatisasi pemesanan lapangan futsal secara *real-time*, pencegahan jadwal ganda (*anti-double booking*), pembayaran multi-kanal (Tunai & QRIS), serta manajemen operasional arena terpadu.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+</div>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📋 Deskripsi Umum
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**FutsalHub** dibangun untuk menggantikan pencatatan reservasi manual menjadi sistem terintegrasi yang cepat, akurat, dan transparan bagi penyewa (*Customer*) maupun pengelola arena (*Administrator*). Sistem ini menangani siklus pemesanan dari pemilihan jenis lantai lapangan, pengecekan slot jam operasional secara *real-time*, penguncian transaksi untuk mencegah bentrok jadwal, verifikasi pembayaran, hingga pelaporan keuangan siap cetak.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## ✨ Fitur Utama Sistem
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 👤 Modul Customer (Penyewa Lapangan)
+1. **Cek Jadwal & Ketersediaan Lapangan secara Real-Time**  
+   Menampilkan status ketersediaan slot jam operasional lapangan secara langsung berdasarkan tanggal dan jenis lapangan yang dipilih. Sistem otomatis menonaktifkan tanggal masa lalu serta slot jam yang sudah melewati waktu berjalan (zona waktu `Asia/Jakarta`).
+2. **Validasi Anti-Bentrok Jadwal (*Slot Overlap Validation*)**  
+   Mendukung pemesanan *multi-slot* (beberapa jam sekaligus) dalam satu transaksi yang dilindungi oleh *Database Transaction* dan *Pessimistic Locking* (`lockForUpdate()`), sehingga mencegah bentrok jadwal atau *double-booking* saat dua pengguna memesan slot yang sama secara bersamaan.
+3. **Multi-Metode Pembayaran (Tunai & QRIS)**  
+   - **QRIS Dinamis**: Menampilkan kode QR pembayaran arena dilengkapi fitur unggah bukti transfer (`JPG`, `JPEG`, `PNG`, `WEBP` maks. `2MB`).
+   - **Tunai di Kasir (*Cash*)**: Pelanggan dapat melakukan reservasi terlebih dahulu dan melakukan pelunasan langsung di kasir arena saat hari pertandingan.
+4. **Riwayat Pesanan, Invoice & Pembatalan Mandiri**  
+   Menampilkan kode booking unik (`FTS-XXXXXX`), rincian jam bermain, status pesanan (*Pending*, *Terkonfirmasi*, *Dibatalkan*), invoice digital, serta opsi pembatalan sebelum diverifikasi admin.
+5. **Autentikasi & Manajemen Akun (+62 WhatsApp)**  
+   Registrasi akun dengan standardisasi otomatis nomor WhatsApp format `+62`, pembaruan profil dan foto avatar, serta dukungan notifikasi *Dynamic Island*.
 
-```bash
-composer require laravel/boost --dev
+### 🛡️ Modul Administrator (Pengelola Arena)
+1. **Panel Manajemen Jadwal & Data Lapangan**  
+   Pengelolaan penuh (*CRUD*) data lapangan mencakup tipe lantai (*Vinyl*, *Rumput Sintetis*, *Interlock*), tarif sewa per jam, deskripsi fasilitas, gambar lapangan, serta status operasional (*Tersedia* / *Maintenance*).
+2. **Verifikasi Reservasi & Pembayaran Dua Arah**  
+   - **QRIS**: Pratinjau bukti transfer resolusi penuh via modal untuk aksi **Setujui** (*Confirmed*) atau **Tolak** (*Cancelled*).
+   - **Cash**: Konfirmasi pelunasan tunai di kasir atau pembatalan pesanan jika penyewa berhalangan hadir.
+3. **Manajemen Data Customer & Direct Chat WhatsApp**  
+   Daftar member lengkap dengan tombol **Chat WhatsApp** satu klik (`wa.me/62...`) beserta template pesan otomatis, serta kebijakan pemulihan akun (*SoftDeletes*) yang membedakan akun dihapus oleh admin dan akun dihapus mandiri oleh pengguna.
+4. **Rekap Laporan Sewa & Cetak Dokumen Resmi**  
+   Filter laporan berdasarkan rentang tanggal, lapangan, dan status reservasi dengan status awal *menunggu difilter*, paginasi navigasi **Prev / Next**, ringkasan pendapatan terverifikasi, serta tampilan cetak dokumen laporan (*print-ready layout*).
 
-php artisan boost:install
-```
+---
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## 🛠️ Tech Stack
 
-## Contributing
+| Kategori | Teknologi | Keterangan |
+| :--- | :--- | :--- |
+| **Backend Framework** | **Laravel 13** (`v13.40.0`) | Arsitektur MVC, Routing, Middleware RBAC, Eloquent ORM |
+| **Bahasa Pemrograman** | **PHP 8.5+** (Min. `^8.3`) | Logika bisnis server-side & keamanan transaksi |
+| **Database** | **MySQL / MariaDB** | Penyimpanan data relasional dengan integritas ACID & *SoftDeletes* |
+| **Frontend & Templating** | **Blade Templates** & **Vanilla JS** | *Server-Side Rendering* (SSR) & pengecekan slot via Fetch API |
+| **Styling & Bundler** | **Tailwind CSS v4** & **Vite 8** | Antarmuka responsif modern & kompilasi aset cepat |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🚀 Panduan Instalasi Lokal
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Prasyarat Sistem
+Pastikan perangkat Anda sudah terpasang:
+- **PHP >= 8.3** (direkomendasikan PHP 8.5, atau gunakan [Laragon](https://laragon.org/))
+- **Composer**
+- **Node.js & NPM**
+- **MySQL Server**
 
-## Security Vulnerabilities
+### Langkah-Langkah Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/seevaroo/FutsalHub.git
+   cd FutsalHub
+   ```
 
-## License
+2. **Install Dependensi PHP (Composer)**
+   ```bash
+   composer install
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. **Salin dan Konfigurasi File `.env`**  
+   Salin `.env.example` menjadi `.env`:
+   ```bash
+   # Linux / macOS / Git Bash
+   cp .env.example .env
+
+   # Windows PowerShell
+   Copy-Item .env.example .env
+   ```
+   Buat database baru bernama `futsalhub` di MySQL / phpMyAdmin, lalu sesuaikan konfigurasi koneksi database di dalam file `.env`:
+   ```env
+   APP_NAME=FutsalHub
+   APP_URL=http://localhost:8000
+   APP_TIMEZONE=Asia/Jakarta
+
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=futsalhub
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Generate Application Key & Symbolic Link Storage**
+   ```bash
+   php artisan key:generate
+   php artisan storage:link
+   ```
+   > Perintah `storage:link` diperlukan agar gambar lapangan, foto profil/avatar, dan unggahan bukti transfer QRIS dapat diakses oleh browser.
+
+5. **Jalankan Migrasi Database & Seeder**
+   ```bash
+   php artisan migrate --seed
+   ```
+   > Seeder akan mengisi akun demo awal (Admin & Customer), 3 master data lapangan (*Vinyl*, *Sintetis*, *Interlock*), serta slot jam operasional (`08:00` – `22:00`).
+
+6. **Install Dependensi Frontend & Build Aset**
+   ```bash
+   npm install
+   npm run build
+   ```
+   *(Gunakan `npm run dev` jika Anda ingin menjalankan Vite dalam mode pengembangan/hot-reload).*
+
+7. **Jalankan Server Aplikasi Lokal**
+   ```bash
+   php artisan serve
+   ```
+   Buka browser dan kunjungi **`http://localhost:8000`**.
+
+---
+
+## 🔐 Akun Demo (Hasil Seeder)
+
+Setelah menjalankan `php artisan migrate --seed`, Anda dapat langsung menguji aplikasi menggunakan akun berikut:
+
+| Peran (*Role*) | Email | Password |
+| :--- | :--- | :--- |
+| **Administrator** | `admin@futsal.com` | `password123` |
+| **Customer** | `customer@gmail.com` | `password123` |
+
+---
+
+## 👨‍💻 Informasi Pengembang (Author)
+
+- **Nama:** Alvaro Raka Pratama
+- **Kompetensi Keahlian:** Rekayasa Perangkat Lunak (RPL)
+- **Repository:** [github.com/seevaroo/FutsalHub](https://github.com/seevaroo/FutsalHub)
+
+---
+
+<div align="center">
+  <sub>Dikembangkan dengan menggunakan Laravel 13 &amp; Tailwind CSS v4 — &copy; 2026 FutsalHub</sub>
+</div>
